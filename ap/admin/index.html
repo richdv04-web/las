@@ -351,6 +351,20 @@ body:before,body:after{display:none!important}
 .mx .rw2 .c b,.mx .rw2 .m b{color:var(--fg);font-weight:700}
 .mx .ft{padding:0 0 22px;font-size:12.5px;color:var(--mut)}
 .mx .ft b{color:var(--fg)}
+.ml{padding:22px 22px 8px}
+.ml .mlh{display:flex;align-items:center;gap:8px;padding-bottom:14px;border-bottom:1px solid var(--ln)}
+.ml .mlh b{font-size:15px;font-weight:600;letter-spacing:-.02em}
+.ml .mlc{font-size:12.5px;color:var(--mut)}
+.ml .mlh .cpb{margin-left:auto}
+.ml .mr{display:grid;grid-template-columns:minmax(0,1fr) 40px 104px;align-items:center;column-gap:12px;padding:15px 0;border-bottom:1px solid var(--ln);font-size:14px}
+.ml .mr:last-child{border-bottom:0}
+.ml .mn{font-weight:600;display:flex;align-items:center;gap:8px;min-width:0}
+.ml .mc{text-align:right;color:var(--mut);font-size:12.5px;white-space:nowrap}
+.ml .mv{text-align:right;color:var(--mut);font-size:12px;white-space:nowrap;font-variant-numeric:tabular-nums}
+.ml .mv b{color:var(--fg);font-size:17px;font-weight:700;margin-right:2px}
+.mx .xlr{display:flex;align-items:center;gap:6px;padding:4px 0 18px;font-size:12.5px;color:var(--mut)}
+.mx .xlr span{margin-right:4px}
+.mx .xlr .cpb{margin-left:0}
 .mlist{padding:22px 22px 8px}
 .mlist .rw2{grid-template-columns:minmax(0,1fr) 54px 92px}
 .mlist .nm0{font-weight:700;display:flex;align-items:center;gap:8px;min-width:0}
@@ -442,7 +456,7 @@ body:before,body:after{display:none}
 
 .gl{background:transparent!important;border:0!important;border-top:1px solid var(--ln)!important;border-radius:0!important;box-shadow:none!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
 .grp{padding:22px 0 20px}
-.mx{padding:26px 0 6px}.mlist{padding:18px 0 6px}
+.mx{padding:26px 0 6px}.mlist{padding:18px 0 6px}.ml{padding:18px 0 6px}
 .dd{padding:24px 0 6px}
 
 .hdr{margin:30px 0 8px;align-items:flex-end}
@@ -668,6 +682,8 @@ function pc(a,b){return b?Math.round(a/b*100):null}
 function pt(v){return v==null?'–':v+'%'}
 function fx(n,d){return (Math.round(n*Math.pow(10,d))/Math.pow(10,d)).toFixed(d)}
 function won(n){return Number(n||0).toLocaleString()}
+function xlRows(rs){return rs.filter(function(r){return r.mip}).sort(function(a,z){return (z.mip||0)-(a.mip||0)||ko(a.name,z.name)})}
+function xlTxt(rs){return encodeURIComponent(xlRows(rs).map(function(r){return r.name+'\t'+r.mip}).join('\n'))}
 
 
 function rosterAt(c){var s=D.snaps||[],pick=s[0];s.forEach(function(x){if(x.eff<=c)pick=x});return pick?pick.rows.filter(function(r){return r.y!==false}):[]}
@@ -749,7 +765,7 @@ function makeReport(k){
     else{y+=30;tx(c,'사업단 전체',P+4,y,26,700,T.mut);y+=44}
     
     var hh=560,K='#FFFFFF',K6='#8A8A8A',bc=B?T.b[B.i]:'#FFFFFF';glass(c,T,P,y,IW,hh,48,null,T.hbg);
-    tx(c,'응답률',P+44,y+76,32,700,K);tx(c,'RESPONSE RATE',P+44+mw(c,'응답률',32,700)+16,y+76,20,600,'#5E5E5F','left',3);tx(c,'명단 기준 · 미응답 포함',P+44,y+116,22,450,'#6E6E6F');
+    tx(c,'응답률',P+44,y+76,32,700,K);tx(c,'RESPONSE RATE',P+44+mw(c,'응답률',32,700)+16,y+76,20,600,'#5E5E5F','left',3);0;
     numC(c,X.respP==null?'–':String(X.respP),P+40,y+352,250,K,300,'%','#7A7A7A');
     var rx=W-P-44;tx(c,X.resp+' / '+X.base+'명',rx,y+346,32,500,K6,'right');
     cTicks(c,P+44,y+390,IW-88,40,X.resp,0,B?B.pend.length:C.pendN,bc,B?'#9A8BE8':'rgba(255,255,255,.22)');
@@ -1128,7 +1144,7 @@ function renderDash(){
   $('tabs').onclick=function(e){var b=e.target.closest('button');if(!b)return;TAB=b.dataset.t;render();window.scrollTo(0,0)};
   [].forEach.call(document.querySelectorAll('[data-go]'),function(b){b.onclick=function(){TAB=b.dataset.go;render();window.scrollTo(0,0)}});
   [].forEach.call(document.querySelectorAll('[data-vw]'),function(b){b.onclick=function(){VW=b.dataset.vw;render()}});
-  [].forEach.call(document.querySelectorAll('[data-add]'),function(b){b.onclick=function(){var p=b.dataset.add.split('|');addToRoster(p[0],+p[1])}});[].forEach.call(document.querySelectorAll('[data-drop]'),function(b){b.onclick=function(){if(b.dataset.armed){dropFromRoster(b.dataset.drop)}else{b.dataset.armed='1';b.classList.add('arm');b.textContent=b.dataset.drop+' · 제외?';setTimeout(function(){if(b.isConnected){b.dataset.armed='';b.classList.remove('arm');b.textContent=b.dataset.drop}},2600)}}});[].forEach.call(document.querySelectorAll('[data-cp]'),function(b){b.onclick=function(){copy(b.dataset.cp).then(function(){toast('미응답 명단을 복사했어요')})}});
+  [].forEach.call(document.querySelectorAll('[data-xl]'),function(b){b.onclick=function(){copy(decodeURIComponent(b.dataset.xl)).then(function(){toast('이름·금액을 복사했어요 · 엑셀 칸에 붙여넣기')})}});[].forEach.call(document.querySelectorAll('[data-add]'),function(b){b.onclick=function(){var p=b.dataset.add.split('|');addToRoster(p[0],+p[1])}});[].forEach.call(document.querySelectorAll('[data-drop]'),function(b){b.onclick=function(){if(b.dataset.armed){dropFromRoster(b.dataset.drop)}else{b.dataset.armed='1';b.classList.add('arm');b.textContent=b.dataset.drop+' · 제외?';setTimeout(function(){if(b.isConnected){b.dataset.armed='';b.classList.remove('arm');b.textContent=b.dataset.drop}},2600)}}});[].forEach.call(document.querySelectorAll('[data-cp]'),function(b){b.onclick=function(){copy(b.dataset.cp).then(function(){toast('미응답 명단을 복사했어요')})}});
   $('blink').onclick=function(){if(D)copy(location.href.replace(/admin\/?(index\.html)?([?#].*)?$/,'')).then(function(){toast('설문 링크를 복사했어요')});else toast('설문 링크는 배포 후 연결돼요')};
   $('bnt').onclick=function(){repCopy('notice')};$('bns').onclick=function(){repSave('notice')};
   $('bcp').onclick=function(){repCopy(TAB==='all'?'all':+TAB)};$('bsv').onclick=function(){repSave(TAB==='all'?'all':+TAB)}}
@@ -1160,7 +1176,7 @@ function arc(p,col,N,r0,r1,sw){N=N||60;r0=r0||72;r1=r1||98;sw=sw||1.7;var v=p==n
 function heroHtml(x,col){
   var d=x.pendN!=null?x.pendN:x.pend.length;col=col||'var(--fg)';
   return '<section class="nh"><div class="nh-g">'+arc(x.respP,col)+'<div class="nh-c"><div class="nh-n">'+(x.respP==null?'–':x.respP+'<small>%</small>')+'</div></div></div>'+
-   '<div class="nh-cap">응답률<em>RESPONSE RATE · 명단 기준 · 미응답 포함</em></div>'+
+   '<div class="nh-cap">응답률<em>RESPONSE RATE</em></div>'+
    '<div class="nh-l"><span><i style="background:'+col+'"></i>응답 <b>'+x.resp+'명</b></span><span><i style="background:var(--ac)"></i>미응답 <b>'+d+'명</b></span><span>명단 <b>'+x.base+'명</b></span></div>'+
    '<div class="kv"><div class="r"><span class="k">AP 예정</span><span class="v">'+x.plan+'<small>건</small></span><span class="p">예정 인원 <b>'+x.ppl+'명</b></span></div><div class="r"><span class="k">예정 없음</span><span class="v">'+x.none+'<small>명</small></span><span class="p">응답자 중</span></div></div></section>'}
 function dayCard(x,all){
@@ -1186,6 +1202,7 @@ function monthBlock(x,all){
   var lab=nextMon(CY)+'월 예상';
   var h='<div class="sec">'+esc(lab)+'</div><div class="gl mx"><div class="mh"><b>다음 달 예상 계약 · MIP</b><span>'+x.mRows.length+'명 입력</span></div><div class="st2"><div><div class="k">예상 계약</div><div class="n2">'+x.mC+'<small>건</small></div></div><div><div class="k">예상 총 MIP</div><div class="n2">'+won(x.mM)+'<small>만원</small></div></div></div>';
   if(all)h+=x.bs.map(function(b,i){return '<div class="rw2" style="--bc:var('+BC[i%3]+')"><span class="n"><i></i>'+esc(b.team)+'</span><span class="c"><b>'+b.mC+'</b>건</span><span class="m"><b>'+won(b.mM)+'</b>만원</span></div>'}).join('');
+  if(all)h+='<div class="xlr"><span>엑셀 복사</span>'+x.bs.map(function(b){return '<button class="cpb" data-xl="'+xlTxt(b.mRows)+'">'+esc(b.team)+'</button>'}).join('')+'</div>';
   h+='<div class="ft" style="padding-top:'+(all?'4':'18')+'px">예상 계약 없음 <b>'+x.mN+'명</b></div></div>';return h}
 function allView(C){
   var h=heroHtml(C);
@@ -1215,7 +1232,8 @@ function brView(b,C){
   h+='<div class="legend2"><span><i style="background:var(--ac)"></i>공지 후 응답</span><span><i style="background:var(--ex)"></i>명단 외</span></div>';
   if(C.me){h+=monthBlock(b,false);
     var rs=b.mRows.slice().sort(function(a,z){return (z.mip||0)-(a.mip||0)||ko(a.name,z.name)});
-    h+='<div class="gl mlist" style="margin-top:14px">'+(rs.length?rs.map(function(r){return (r.contracts||r.mip)?'<div class="rw2"><span class="nm0">'+esc(r.name)+tags(r)+'</span><span class="c"><b>'+r.contracts+'</b>건</span><span class="m"><b>'+won(r.mip)+'</b>만원</span></div>':'<div class="rw2"><span class="nm0">'+esc(r.name)+tags(r)+'</span><span class="z">예상 없음</span></div>'}).join(''):'<div class="none" style="padding:6px 0 18px">아직 입력이 없어요</div>')+'</div>'}
+    var xr=xlRows(b.mRows);
+    h+='<div class="gl ml"><div class="mlh"><b>개인별 예상</b><span class="mlc">'+xr.length+'명</span>'+(xr.length?'<button class="cpb" data-xl="'+xlTxt(b.mRows)+'">엑셀 복사</button>':'')+'</div>'+(xr.length?xr.map(function(r){return '<div class="mr"><span class="mn">'+esc(r.name)+tags(r)+'</span><span class="mc">'+(r.contracts||0)+'건</span><span class="mv"><b>'+won(r.mip)+'</b>만원</span></div>'}).join(''):'<div class="none" style="padding:18px 0 14px">입력된 예상이 없어요</div>')+'</div>'}
   h+=notes(b);return h}
 boot();
 </script></body></html>
