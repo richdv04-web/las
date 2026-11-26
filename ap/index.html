@@ -359,7 +359,7 @@ body{padding-bottom:70px}
     <button type="button" class="ed" id="ed">EDIT</button>
   </div>
 </main>
-<div class="demo" id="demo"><small>PREVIEW</small><div id="demoB"><button data-m="n" class="on">일반 주차</button><button data-m="e">월말 주차</button><button data-m="l">마감 후</button></div></div>
+<div class="demo" id="demo"><small>PREVIEW</small><div id="demoB"><button data-m="n" class="on">일반 주차</button><button data-m="e">예상 설문 주차</button><button data-m="l">마감 후</button></div></div>
 </div>
 
 <script>
@@ -528,7 +528,7 @@ body{padding-bottom:70px}
     var lf=function(x){var t=new Date(x.getTime());t.setDate(t.getDate()+7);return t.getMonth()!==x.getMonth()},st=new Date(d.getTime()),n0=0;
     if(!info.monthEnd){while(n0<6&&!lf(st)){st.setDate(st.getDate()-7);n0++}}else n0=0;
     var gm=new Date(st.getTime());gm.setDate(gm.getDate()+7);
-    $('wk').textContent=(gm.getMonth()+1)+'월 '+(n0+1)+'주차'+(info.monthEnd?' · 월말':'');
+    $('wk').textContent=(gm.getMonth()+1)+'월 '+(n0+1)+'주차'+(info.monthEnd?' · '+(gm.getMonth()+1)+'월 예상':'');
     var b=$('badge');b.classList.toggle('late',late);
     $('badgeT').textContent='제출기한 '+md(c)+'(금) 17:00';
     var t=new Date();t=new Date(t.getFullYear(),t.getMonth(),t.getDate());var dl=new Date(info.deadline);dl=new Date(dl.getFullYear(),dl.getMonth(),dl.getDate());var dd=Math.round((dl-t)/864e5);

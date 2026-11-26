@@ -1030,7 +1030,7 @@ function openSettings(){
       '<details class="smd"><summary>엑셀에서 한 번에 붙여넣기</summary><textarea class="fld" id="smt" spellcheck="false"></textarea><div class="d" style="margin:8px 0 0">한 줄에 <b>지점번호 이름</b> (1 TREASURE · 2 HEXAGON · 3 A-ONE). 빼려면 이름 뒤에 <b>제외</b>.</div></details>'+
       '<div class="smbar"><div class="smp" id="smp"></div><button class="pl pri full" id="smsv">명단 저장</button></div></div>';
     var cur=D.cycle,sv=D.settings['monthend|'+cur],on=sv==='Y'?true:sv==='N'?false:fri(cur,7).slice(0,7)!==cur.slice(0,7);
-    h+='<div class="sm-sec"><h4>월말 설문</h4><div class="sw"><div><b>'+esc(wlabel(cur))+' 월말 설문</b><span>켜면 예상 계약(건)·MIP를 함께 받아요</span></div><i id="smm" class="'+(on?'on':'')+'" role="switch" aria-checked="'+on+'"></i></div></div>'+
+    h+='<div class="sm-sec"><h4>예상 설문 (월말)</h4><div class="sw"><div><b>'+esc(wlabel(cur))+' · 다음 달 예상 설문</b><span>켜면 예상 계약(건)·MIP를 함께 받아요</span></div><i id="smm" class="'+(on?'on':'')+'" role="switch" aria-checked="'+on+'"></i></div></div>'+
       xsSec()+shSec()+
       '<div class="sm-sec"><h4>접속 키</h4><div class="d">관리자 페이지에 들어올 때 쓰는 키예요. <b>비워서 저장하면 키 없이 누구나 열 수 있어요.</b> 링크가 공개돼 있으니 키를 걸어두는 걸 권장해요.</div><div class="sm-row" style="margin-bottom:8px"><input class="fld" id="smkv" placeholder="새 접속 키 (4자 이상, 공백 없이)" autocomplete="off"></div><button class="pl full" id="smkb">접속 키 저장</button></div>';
   }
@@ -1054,7 +1054,7 @@ function render(){
   h+='<div class="nt"><button class="nb" id="bnt">'+ICO.mg+'<div><b>공지용 이미지 복사</b><span>전체 응답률 + 지점별 응답률 · 최대 화질</span></div></button><button class="ib" id="bns" aria-label="공지용 이미지 저장">'+ICO.dl+'</button></div>';
   h+=TAB==='all'?allView(C):'<div class="brv" style="--bc:var(--b'+(+TAB%3+1)+')">'+brView(C.bs[+TAB],C)+'</div>';
   say(h);
-  $('tmt').textContent=nowTxt(D.now)+' 기준';$('hdl').innerHTML='<span>제출기한 '+md(CY)+' 17:00</span>'+(cur?'<span class="mark ac">진행 중</span>':'')+(C.me?'<span class="mark">월말 설문</span>':'');
+  $('tmt').textContent=nowTxt(D.now)+' 기준';$('hdl').innerHTML='<span>제출기한 '+md(CY)+' 17:00</span>'+(cur?'<span class="mark ac">진행 중</span>':'')+(C.me?'<span class="mark">'+glab(gstart(CY)||CY).m+'월 예상 설문</span>':'');
   $('wpick').onclick=openWeeks;
   $('tabs').onclick=function(e){var b=e.target.closest('button');if(!b)return;TAB=b.dataset.t;render();window.scrollTo(0,0)};
   [].forEach.call(document.querySelectorAll('[data-go]'),function(b){b.onclick=function(){TAB=b.dataset.go;render();window.scrollTo(0,0)}});
@@ -1069,7 +1069,7 @@ function openWeeks(){
   if(!PM||gl.indexOf(PM)<0)PM=gstart(CY)||gl[gl.length-1];
   function draw(){var ix=gl.indexOf(PM),g=glab(PM),cs=gweeks(PM).filter(function(c){return c<=D.cycle}).reverse();
     $('wl').innerHTML='<div class="mn"><button id="mnp" aria-label="이전 달"'+(ix<=0?' disabled':'')+'>‹</button><b>'+g.y+'년 '+g.m+'월</b><button id="mnn" aria-label="다음 달"'+(ix>=gl.length-1?' disabled':'')+'>›</button></div>'+
-      cs.map(function(c){var C=calc(c),k=gweeks(PM).indexOf(c)+1;return '<button class="wi nop'+(c===CY?' on':'')+'" data-c="'+c+'"><b>'+k+'주차'+(c===D.cycle?'<em>진행 중</em>':'')+(C.me?'<em>월말</em>':'')+'</b><span class="r">'+esc(rng(c))+'</span></button>'}).join('');
+      cs.map(function(c){var C=calc(c),k=gweeks(PM).indexOf(c)+1;return '<button class="wi nop'+(c===CY?' on':'')+'" data-c="'+c+'"><b>'+k+'주차'+(c===D.cycle?'<em>진행 중</em>':'')+(C.me?'<em>'+glab(gstart(c)||c).m+'월 예상</em>':'')+'</b><span class="r">'+esc(rng(c))+'</span></button>'}).join('');
     $('mnp').onclick=function(){if(ix>0){PM=gl[ix-1];draw()}};$('mnn').onclick=function(){if(ix<gl.length-1){PM=gl[ix+1];draw()}};
     [].forEach.call($('wl').querySelectorAll('.wi'),function(b){b.onclick=function(){CY=b.dataset.c;$('wm').classList.remove('on');render();window.scrollTo(0,0)}})}
   draw();$('wm').classList.add('on')}
