@@ -1057,8 +1057,8 @@ function openSettings(){
       xsSec()+shSec()+
       '<div class="sm-sec"><h4>접속 키</h4><div class="d">관리자 페이지에 들어올 때 쓰는 키예요. <b>비워서 저장하면 키 없이 누구나 열 수 있어요.</b> 링크가 공개돼 있으니 키를 걸어두는 걸 권장해요.</div><div class="sm-row" style="margin-bottom:8px"><input class="fld" id="smkv" placeholder="새 접속 키 (4자 이상, 공백 없이)" autocomplete="off"></div><button class="pl full" id="smkb">접속 키 저장</button></div>';
   }
-  h+='<div class="sm-sec"><button class="pl full" id="smo">나가기</button><div class="d" style="margin:8px 0 0;text-align:center">이 기기에 저장된 키를 지워요</div></div>';
-  $('smb').innerHTML=h;$('smo').onclick=function(){logout('')};
+  if(KEY&&KEY!=='-')h+='<div class="sm-sec"><button class="pl full" id="smo">나가기</button><div class="d" style="margin:8px 0 0;text-align:center">이 기기에 저장된 키를 지워요</div></div>';
+  $('smb').innerHTML=h;if($('smo'))$('smo').onclick=function(){logout('')};
   if(ROLE==='edit'){
     $('smt').value=smFill($('smw').value);smDraw();smUpdate();
     $('smw').onchange=function(){$('smt').value=smFill($('smw').value);smDraw();smUpdate()};$('smt').oninput=function(){smDraw();smUpdate()};$('smab').onclick=smAdd;$('sma').oninput=smSug;$('sma').addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();smAdd()}});
