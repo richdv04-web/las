@@ -933,11 +933,12 @@ function makeNoticeV(v){
   var BR=C.bs.map(function(b,i){var r=rt(b.resp,b.base);return {b:b,i:i,r:r,col:pal.b[i],d:hasP&&Cp.bs[i].base?r-rt(Cp.bs[i].resp,Cp.bs[i].base):null}});
   function GR(c,x,w){var g=c.createLinearGradient(x,0,x+w,0),k=[pal.gold,pal.b[0],pal.b[1],pal.b[2]];k.forEach(function(q,i){g.addColorStop(i/3,q)});return g}
   function LBC(c,x,t,sz,wt){if(TGRAD!==2)return T.mut;c.font=wt+' '+sz+'px '+FF;var w=c.measureText(t).width;return GR(c,x,w)}
+  function wm(c,x,y,sc,col){var L=[[0,'M1 0V13H10'],[17,'M.8 14L4.2 1H5.8L9.2 14'],[34,'M10 1H3.2Q1 1 1 3.8Q1 7 3.2 7H6.8Q9 7 9 10Q9 13 6.8 13H0'],[60,'M.8 14L4.2 1H5.8L9.2 14'],[77,'M1 14V1H6.8Q9 1 9 4Q9 7 6.8 7H1'],[103,'M10 1H3.2Q1 1 1 4V10Q1 13 3.2 13H10'],[120,'M1 0V14M9 0V14M1 7H9'],[137,'M0 1H10M0 7H10M0 13H10'],[154,'M10 1H3.2Q1 1 1 4V10Q1 13 3.2 13H10'],[171,'M1 0V14M9.2 1L1.6 7.6M3.8 6.2L9.2 13'],[206,'M1 14V1H6.8Q9 1 9 4Q9 7 6.8 7H1M5 7L9.2 14'],[223,'M0 1H10M0 7H10M0 13H10'],[240,'M.6 1L5 14L9.4 1'],[257,'M5 0V14'],[274,'M0 1H10M0 7H10M0 13H10'],[291,'M.4 1L3.4 14L6.5 4L9.6 14L12.6 1']];
+    c.save();c.translate(x,y);c.scale(sc,sc);c.strokeStyle=col;c.lineWidth=2;c.lineJoin='miter';c.lineCap='butt';L.forEach(function(g){c.save();c.translate(g[0],0);c.stroke(new Path2D(g[1]));c.restore()});c.restore();return 305*sc}
   function head(c,y){
-    function pf(t,x,y,sz,wt,col,ls){c.font=wt+' '+sz+'px Paperlogy,'+FF;c.fillStyle=col;c.textAlign='left';c.textBaseline='alphabetic';try{c.letterSpacing=ls+'px'}catch(e){}c.fillText(t,x,y);var w=c.measureText(t).width;try{c.letterSpacing='0px'}catch(e){}return w}
-    var tcol=T.fg;if(TGRAD){c.font='800 68px Paperlogy,'+FF;try{c.letterSpacing='-1.5px'}catch(e){}var tw0=c.measureText('LAS AP Check Review').width;try{c.letterSpacing='0px'}catch(e){}tcol=GR(c,PL,tw0)}
-    pf('LAS AP Check Review',PL,y+52,68,800,tcol,-1.5);
-    y+=50+70;var wl=wlabel(CY);var ww=pf(wl,PL,y,34,600,T.fg,-.5);pf('·  '+wsub(CY),PL+ww+16,y,32,400,T.mut,0);return y+96}
+    wm(c,PL,y+14,2.4,T.fg);
+    var sb=y+14+14*2.4+84;var wl=wlabel(CY);tx(c,wl,PL,sb,36,700,T.fg,'left',-.5);var ww=mw(c,wl,36,700,-.5);
+    tx(c,wsub(CY),PL+ww+22,sb,23,400,T.mut,'left',0);return sb+110}
   function cnt(c,xr,y,a,b,sz){var t=' / '+b+'명',w=mw(c,t,sz,500);tx(c,t,xr,y,sz,500,T.mut,'right');tx(c,String(a),xr-w,y,sz,700,T.fg,'right')}
   function paint(c,H){
     if(H){c.fillStyle=MOOD&&!T.dark?'#F2F2F5':T.bg;c.fillRect(0,0,W,H)}
@@ -963,14 +964,13 @@ function makeNoticeV(v){
       var trk2=T.dark?'rgba(255,255,255,.075)':'rgba(0,0,0,.075)',bd=T.dark?'rgba(255,255,255,.075)':'rgba(0,0,0,.075)';
       function card(x,y0,w,h,top,bot,gl){if(NOBOX)return;if(MOOD&&!T.dark){c.save();c.shadowColor='rgba(30,30,60,.09)';c.shadowBlur=40*S;c.shadowOffsetY=14*S;rr(c,x,y0,w,h,44);c.fillStyle='#FFFFFF';c.fill();c.restore()}rr(c,x,y0,w,h,44);var g=c.createLinearGradient(0,y0,0,y0+h);g.addColorStop(0,top);g.addColorStop(1,bot);c.fillStyle=g;c.fill();if(MOOD&&gl&&false){c.save();rr(c,x,y0,w,h,44);c.clip();var rg=c.createRadialGradient(x+w*gl[1],y0+h*gl[2],0,x+w*gl[1],y0+h*gl[2],gl[3]);rg.addColorStop(0,hexA(gl[0],T.dark?.34:.13));rg.addColorStop(1,hexA(gl[0],0));c.fillStyle=rg;c.fillRect(x,y0,w,h);c.restore()}rr(c,x+.75,y0+.75,w-1.5,h-1.5,43);c.strokeStyle=bd;c.lineWidth=1.5;c.stroke()}
       var ct=MOOD?(T.dark?'rgba(255,255,255,.055)':'#FFFFFF'):(T.dark?'#1B1C1F':'#FFFFFF'),cb=MOOD?(T.dark?'rgba(255,255,255,.055)':'#FFFFFF'):(T.dark?'#141517':'#FFFFFF');
-      y-=14;var hh=392;card(P,y,IW,hh,ct,cb,[pal.gold,.84,.5,430]);
-      tx(c,'전체 응답률',P+52,y+76,28,600,LBC(c,P+52,'전체 응답률',28,600),'left',1);
-      numC(c,String(rAll),P+44,y+262,196,T.fg,300,'%',T.mut);
-      var cs=' / '+C.base+'명';if(!MOOD){tx(c,String(C.resp),P+52,y+332,32,700,T.fg);tx(c,cs,P+52+mw(c,String(C.resp),32,700),y+332,32,500,T.mut)}else{var chx=P+52,chy=y+310;[['응답 '+C.resp+'명',T.fg],['미응답 '+(C.base-C.resp)+'명',T.mut],['대상 '+C.base+'명',T.mut]].forEach(function(ch){var cw=mw(c,ch[0],24,600)+36;rr(c,chx,chy,cw,48,24);c.fillStyle=T.dark?'rgba(255,255,255,.06)':'rgba(0,0,0,.05)';c.fill();c.strokeStyle=T.dark?'rgba(255,255,255,.10)':'rgba(0,0,0,.08)';c.lineWidth=1.5;c.stroke();tx(c,ch[0],chx+18,chy+32,24,600,ch[1]);chx+=cw+12})}
-      var cx=P+IW-186,cy=y+hh/2;if(GAUGE==='semi'&&MOOD){cx=P+IW-200;cy=y+262;semiT(c,cx,cy,114,150,28,C.resp/C.base,pal.gold,trk2)}else if(GAUGE==='semi')ring(c,cx,cy,118,14,C.resp/C.base,pal.gold,trk2);else gaugeDraw(c,134,cx,cy,C.resp/C.base,pal.gold,T.dark,84);
-      if(dAll!=null){var sh=(GAUGE==='semi'&&MOOD)?[-62,-16]:[-22,28];tx(c,'지난주 대비',cx,cy+sh[0],22,500,GAUGE==='wave'?T.fg:T.faint,'center');dpill(c,T,cx,cy+sh[1],dAll,true,pal,pal.gold,true)}
-      else{tx(c,String(C.resp),cx,cy+10,54,700,T.fg,'center')}
-      if(NOBOX){c.fillStyle=line;c.fillRect(PL,y+hh+84,W-PL*2,1.5);y+=hh+84+110}else y+=hh+104;tx(c,'지점별 응답률',PL,y,28,600,LBC(c,PL,'지점별 응답률',28,600),'left',1);y+=NOBOX?6:44;
+      var y0=y-30;
+      tx(c,'전체 응답률',PL,y0+34,28,600,LBC(c,PL,'전체 응답률',28,600),'left',1);
+      numC(c,String(rAll),PL-8,y0+242,196,T.fg,300,'%',T.mut);
+      var chx=PL,chy=y0+290;[['응답 '+C.resp+'명',T.fg],['미응답 '+(C.base-C.resp)+'명',T.mut],['대상 '+C.base+'명',T.mut]].forEach(function(ch){var cw=mw(c,ch[0],24,600)+36;rr(c,chx,chy,cw,48,24);c.fillStyle=T.dark?'rgba(255,255,255,.06)':'rgba(0,0,0,.05)';c.fill();c.strokeStyle=T.dark?'rgba(255,255,255,.10)':'rgba(0,0,0,.08)';c.lineWidth=1.5;c.stroke();tx(c,ch[0],chx+18,chy+32,24,600,ch[1]);chx+=cw+12});
+      var cx=W-PL-140,cy=y0+170;gaugeDraw(c,134,cx,cy,C.resp/C.base,pal.gold,T.dark,84);
+      if(dAll!=null){tx(c,'지난주 대비',cx,cy-22,22,500,T.faint,'center');dpill(c,T,cx,cy+28,dAll,true,pal,pal.gold,true)}else{tx(c,String(C.resp),cx,cy+10,54,700,T.fg,'center')}
+      y=y0+290+48+104;tx(c,'지점별 응답률',PL,y,28,600,LBC(c,PL,'지점별 응답률',28,600),'left',1);y+=52;
       var gp=NOBOX?24:(MOOD?16:22),X0=NOBOX?PL:P,IW2=NOBOX?W-PL*2:IW,dx=NOBOX?8:40,tw=(IW2-gp*2)/3,th=GAUGE==='semi'?424:480;
       BR.forEach(function(o,i){var x=X0+i*(tw+gp);card(x,y,tw,th,ct,cb,[o.col,.1,1.0,300]);
         c.beginPath();c.arc(x+dx,y+58,8,0,7);c.fillStyle=o.col;c.fill();tx(c,o.b.team,x+dx+20,y+68,27,700,T.fg,'left',.5);
@@ -981,14 +981,14 @@ function makeNoticeV(v){
       y+=th+PL;
       var MA=C.me?monthAvg(CY):null;
       if(MA&&MA.n){
-        tx(c,MA.label+'월 월평균',PL,y,28,600,LBC(c,PL,MA.label+'월 월평균',28,600),'left',1);tx(c,MA.n+'주 기준',W-PL,y,24,500,T.faint,'right');y+=44;
-        var h1=712;card(P,y,IW,h1,ct,cb,[pal.gold,.84,.5,430]);
-        tx(c,'월평균 응답률',P+52,y+76,28,600,LBC(c,P+52,'월평균 응답률',28,600),'left',1);
-        numC(c,String(Math.round(MA.respP)),P+44,y+262,196,T.fg,300,'%',T.mut);
-        var mcx=P+IW-186,mcy=y+168;gaugeDraw(c,134,mcx,mcy,MA.respP/100,pal.gold,T.dark,84);tx(c,MA.n+'주 평균',mcx,mcy+10,24,600,T.mut,'center');
+        y+=30;var m0=y;
+        tx(c,MA.label+'월 월평균 응답률',PL,m0+34,28,600,LBC(c,PL,MA.label+'월 월평균 응답률',28,600),'left',1);
+        numC(c,String(Math.round(MA.respP)),PL-8,m0+242,196,T.fg,300,'%',T.mut);
+        var mcx=W-PL-140,mcy=m0+170;gaugeDraw(c,134,mcx,mcy,MA.respP/100,pal.gold,T.dark,84);tx(c,MA.n+'주 평균',mcx,mcy+10,24,600,T.mut,'center');
+        y=m0+242+96;var h1=40+3*124;card(P,y,IW,h1,ct,cb,[pal.gold,.84,.5,430]);
         function tickBar(x,yy,w,hh,ratio,col){var n=70,g=4,tw=(w-g*(n-1))/n,k=Math.round(Math.min(ratio,1)*n);for(var q=0;q<n;q++){rr(c,x+q*(tw+g),yy,tw,hh,tw/2);c.fillStyle=q<k?col:trk;c.fill()}}
-        MA.bs.forEach(function(b,i){var ry=y+340+i*120,rt_=b.base?b.resp/b.base*100:0;c.fillStyle=line;c.fillRect(P+52,ry-6,IW-104,1.5);c.beginPath();c.arc(P+52+8,ry+40,8,0,7);c.fillStyle=pal.b[i];c.fill();tx(c,b.team,P+52+28,ry+50,30,700,T.fg);
-          var ps=String(Math.round(rt_));tx(c,'%',W-P-52,ry+50,26,400,T.mut,'right');tx(c,ps,W-P-52-mw(c,'%',26,400)-4,ry+50,44,500,T.fg,'right',-1);
+        MA.bs.forEach(function(b,i){var ry=y+22+i*124,rt_=b.base?b.resp/b.base*100:0;if(i){c.fillStyle=line;c.fillRect(P+52,ry-8,IW-104,1.5)}c.beginPath();c.arc(P+52+8,ry+38,8,0,7);c.fillStyle=pal.b[i];c.fill();tx(c,b.team,P+52+28,ry+48,30,700,T.fg);
+          var ps=String(Math.round(rt_));tx(c,'%',W-P-52,ry+48,26,400,T.mut,'right');tx(c,ps,W-P-52-mw(c,'%',26,400)-4,ry+48,44,500,T.fg,'right',-1);
           tickBar(P+52,ry+68,IW-104,30,rt_/100,pal.b[i])});
         y+=h1+PL}
       return y}
