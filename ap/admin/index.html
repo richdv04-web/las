@@ -1093,7 +1093,7 @@ function pgWeek(){return '<div class="pgw"><span>기준 주차</span>'+wpkHTML('
 function renderPage(v){
   var h='',m=PG[v];
   if(v==='roster'){
-    var es={};D.snaps.forEach(function(s){es[s.eff]=1});es[D.cycle]=1;for(var kk=1;kk<=4;kk++)es[fri(D.cycle,7*kk)]=1;var el=Object.keys(es).sort().reverse(),have={};D.snaps.forEach(function(s){have[s.eff]=1});
+    var es={};D.snaps.forEach(function(s){es[s.eff]=1});es[D.cycle]=1;D.responses.forEach(function(r){es[r.cycle]=1});for(var kk=1;kk<=4;kk++)es[fri(D.cycle,7*kk)]=1;var el=Object.keys(es).sort().reverse(),have={};D.snaps.forEach(function(s){have[s.eff]=1});
     h+='<div class="sm-sec"><div class="d">이름을 직접 입력해 <b>추가·제외</b>하거나 목록에서 눌러 제외/복구해요. 선택한 <b>적용 주차부터</b> 반영되고 이전 주차는 그대로예요.</div>'+
       ''+wpkHTML('smw',el,D.cycle,have)+''+
       '<div class="sadd"><div class="smmd" id="smmd"><button data-m="add">추가</button><button data-m="del">제외</button></div><div class="sbr" id="smb3"></div><div class="sar"><input class="fld" id="sma" placeholder="새 이름 입력 (여러 명은 띄어쓰기·쉼표로)" autocomplete="off" enterkeyhint="done"><button class="pl" id="smab">추가</button></div><div class="sgl" id="smsg"></div></div><div id="smc"></div>'+
