@@ -603,11 +603,21 @@ body{transition:padding-left .3s cubic-bezier(.32,.72,0,1)}
  .side{box-shadow:none}
  .top .in{padding:0 28px}.wrap{padding:10px 28px 110px}
 }
-</style></head><body><aside class="side" id="side"><div class="sgh"><span class="wm">L.A.S<i></i></span></div><div class="sg">공유</div><button class="pl" id="blink" aria-label="설문 링크"></button><button class="pl pri" id="bcp" aria-label="이미지 복사"></button><button class="pl" id="bsv" aria-label="저장"></button><div class="sg">관리</div><button class="pl" id="bset" aria-label="설정" style="display:none"></button><button class="pl" id="bref" aria-label="새로고침"></button></aside><div class="scrim" id="scrim"></div><header class="top"><div class="in"><button class="ib" id="sbt" aria-label="사이드바" style="display:none"></button><button class="ib" id="thm"></button><span class="sp"></span><span class="wm">L.A.S<i></i></span></div></header>
+
+.pg{max-width:880px;margin:0 auto;padding-top:6px}
+.pgh{margin:10px 0 22px}.pgh .eyb{font-size:11px;letter-spacing:.2em;font-weight:700;color:var(--faint)}
+.pgh h1{margin:6px 0 6px;font-size:clamp(30px,5vw,40px);font-weight:600;letter-spacing:-.04em}.pgh p{margin:0;color:var(--mut);font-size:14px}
+.pgc{background:var(--card);border:1px solid var(--ln);border-radius:24px;padding:6px 22px 22px}
+.pgc>.sm-sec:first-child{margin-top:0;border-top:0;padding-top:18px}
+.pg .smbar{background:linear-gradient(to bottom,transparent,var(--card) 14px)}
+.pgw{display:flex;align-items:center;gap:12px;padding:18px 0 4px}.pgw span{font-size:13px;color:var(--mut);white-space:nowrap}.pgw .fld{max-width:280px}
+.side .pl.act{background:var(--card2);border-color:var(--ln)}
+@media(max-width:719px){.pgc{padding:4px 16px 18px;border-radius:20px}}
+</style></head><body><aside class="side" id="side"><div class="sgh"><span class="wm">L.A.S<i></i></span></div><div class="sg">메뉴</div><button class="pl nv act" id="nvd" data-v="dash"></button><button class="pl nv" id="nvr" data-v="roster" style="display:none"></button><button class="pl nv" id="nvp" data-v="resp" style="display:none"></button><button class="pl nv" id="nvk" data-v="key" style="display:none"></button><div class="sg">공유</div><button class="pl" id="blink" aria-label="설문 링크"></button><button class="pl pri" id="bcp" aria-label="이미지 복사"></button><button class="pl" id="bsv" aria-label="저장"></button><div class="sg">도구</div><button class="pl" id="bref" aria-label="새로고침"></button></aside><div class="scrim" id="scrim"></div><header class="top"><div class="in"><button class="ib" id="sbt" aria-label="사이드바" style="display:none"></button><button class="ib" id="thm"></button><span class="sp"></span><span class="wm">L.A.S<i></i></span></div></header>
 <main class="wrap" id="root"><div class="sk"></div><div class="sk" style="width:60%"></div><div class="sk" style="height:160px;border-radius:20px"></div></main>
 <div class="mo" id="wm"><div class="sh"><div class="hd2"><h3 style="margin:0">주차 선택</h3><button class="xb" id="wx" aria-label="닫기"></button></div><div class="sub">금요일 기준 주차 · 신청일 다음 주 월~일 AP</div><input class="fld" id="wq" placeholder="월 바로가기 (예: 202612)" inputmode="numeric" autocomplete="off" maxlength="7" style="margin-bottom:10px"><div class="wl" id="wl"></div></div></div>
 <div class="mo" id="rpm"><div class="sh"><h3>이미지</h3><div class="sub">복사가 막혀 있으면 이미지를 길게 눌러 복사하거나 저장해 주세요.</div><img id="rpi" alt="" style="width:100%;display:block;border-radius:14px;border:1px solid var(--ln);min-height:120px"><div style="display:flex;gap:8px;margin-top:14px"><button class="pl" id="rpx" style="flex:1;justify-content:center;height:46px">닫기</button><button class="pl pri" id="rpd" style="flex:1;justify-content:center;height:46px">저장</button></div></div></div>
-<div class="mo" id="sm"><div class="sh"><div class="hd2"><h3 style="margin:0">설정</h3><button class="xb" id="smx" aria-label="닫기"></button></div><div id="smb"></div></div></div>
+<div class="mo" id="sm"><div class="sh"><div class="hd2"><h3 style="margin:0">설정</h3><button class="xb" id="smx" aria-label="닫기"></button></div><div id="smb0"></div></div></div>
 <div class="gate" id="gate"><div class="gc"><div class="ey2">L. A. S · AP CHECK</div><h2>관리자</h2><input class="fld" id="gk" type="password" autocomplete="off" placeholder="키 입력" enterkeyhint="go"><div class="ge" id="ge"></div><button class="pl pri" id="gb">입장</button><div class="hint" id="gh"></div></div></div>
 <div class="toast" id="toast"></div>
 <script>
@@ -690,6 +700,10 @@ var ICO={
  dl:'<svg viewBox="0 0 24 24"><path d="M12 4v11m0 0-4-4m4 4 4-4M5 20h14"/></svg>',
  chd:'<svg viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg>',
  x:'<svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg>',
+ home:'<svg viewBox="0 0 24 24"><path d="M4 11 12 4l8 7M6 9.5V20h12V9.5"/></svg>',
+ users:'<svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.2"/><path d="M3.5 19a5.5 5.5 0 0 1 11 0M16 5.2a3.2 3.2 0 0 1 0 5.6M17.5 14a5.5 5.5 0 0 1 3 5"/></svg>',
+ rows:'<svg viewBox="0 0 24 24"><rect x="4" y="4.5" width="16" height="15" rx="3"/><path d="M4 10h16M4 15h16M10 10v9.5"/></svg>',
+ lock:'<svg viewBox="0 0 24 24"><rect x="5" y="10.5" width="14" height="9.5" rx="3"/><path d="M8.5 10.5V8a3.5 3.5 0 0 1 7 0v2.5"/></svg>',
  pn:'<svg viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="14" rx="3"/><path d="M9.5 5v14"/></svg>',
  mg:'<svg viewBox="0 0 24 24"><path d="M4 10v4a1 1 0 0 0 1 1h2.5L14 19V5L7.5 9H5a1 1 0 0 0-1 1zM17.5 9.5a4 4 0 0 1 0 5"/></svg>'};
 function setTheme(t){document.documentElement.setAttribute('data-theme',t);try{localStorage.setItem('apTheme',t)}catch(e){}icoTheme()}
@@ -965,12 +979,12 @@ function repBind(){$('rpx').onclick=function(){$('rpm').classList.remove('on')};
 var D=null,CY=null,TAB='all',VW='person',LOADED=false,KEY='',ROLE='';
 function say(h){$('root').innerHTML=h}
 function boot(){
-  $('bref').innerHTML=ICO.ref+'<span class="t">새로고침</span>';$('bset').innerHTML=ICO.gear+'<span class="t">설정</span>';$('sbt').innerHTML=ICO.pn;initSide();$('bset').onclick=openSettings;$('smx').innerHTML=ICO.x;$('smx').onclick=function(){$('sm').classList.remove('on')};$('blink').innerHTML=ICO.link+'<span class="t">설문 링크</span>';$('bcp').innerHTML=ICO.cp+'<span class="t">이미지 복사</span>';$('bsv').innerHTML=ICO.dl+'<span class="t">저장</span>';bindTheme();repBind();
+  $('bref').innerHTML=ICO.ref+'<span class="t">새로고침</span>';navInit();$('sbt').innerHTML=ICO.pn;initSide();$('smx').innerHTML=ICO.x;$('smx').onclick=function(){$('sm').classList.remove('on')};$('blink').innerHTML=ICO.link+'<span class="t">설문 링크</span>';$('bcp').innerHTML=ICO.cp+'<span class="t">이미지 복사</span>';$('bsv').innerHTML=ICO.dl+'<span class="t">저장</span>';bindTheme();repBind();
   $('bref').onclick=function(){load()};$('wx').innerHTML=ICO.x;$('wx').onclick=function(){$('wm').classList.remove('on')};$('wm').addEventListener('click',function(e){if(e.target===$('wm'))$('wm').classList.remove('on')});
   gateBind();start();document.addEventListener('visibilitychange',function(){if(!document.hidden&&LOADED)load(true)});
   setInterval(function(){if(!document.hidden&&!document.querySelector('.mo.on')&&LOADED)load(true)},60000)}
 function load(silent){if(!KEY)return Promise.resolve();
-  return api('apiDashboard',KEY).then(function(d){D=d;ROLE=d.role||ROLE;$('bset').style.display='';showSide();LOADED=true;var cs=cycles();if(!CY||cs.indexOf(CY)<0){var hv=cs.filter(function(c){return D.responses.some(function(r){return r.cycle===c})});CY=hv[0]||D.cycle||cs[0]}render()},function(e){
+  return api('apiDashboard',KEY).then(function(d){D=d;ROLE=d.role||ROLE;navShow();showSide();LOADED=true;var cs=cycles();if(!CY||cs.indexOf(CY)<0){var hv=cs.filter(function(c){return D.responses.some(function(r){return r.cycle===c})});CY=hv[0]||D.cycle||cs[0]}render()},function(e){
     if(/unauthorized/.test(errText(e))){var m0=TRYOPEN?'':'키가 맞지 않거나 변경됐어요';TRYOPEN=false;logout(m0);return}
     if(!silent)say('<div class="empty">불러오지 못했어요.<br>'+esc(errText(e))+'<br><br><button class="pl" onclick="load()">다시 시도</button></div>');else toast('새로고침에 실패했어요',true)})}
 
@@ -980,7 +994,7 @@ function gate(msg){$('gate').classList.add('on');$('gk').value='';$('ge').textCo
 function enter(){var k=$('gk').value.trim();if(!k)return;$('gb').disabled=true;$('ge').textContent='';
   api('apiAuth',k).then(function(r){KEY=k;ROLE=r.role;try{localStorage.setItem('apKey',k)}catch(e){}$('gate').classList.remove('on');say('<div class="sk"></div><div class="sk" style="width:60%"></div><div class="sk" style="height:160px;border-radius:20px"></div>');load()},
     function(e){var m=errText(e);$('ge').textContent=m==='unauthorized'?'키가 맞지 않아요':m;$('gb').disabled=false})}
-function logout(msg){KEY='';ROLE='';LOADED=false;D=null;try{localStorage.removeItem('apKey')}catch(e){}$('sm').classList.remove('on');$('bset').style.display='none';hideSide();say('');gate(msg)}
+function logout(msg){KEY='';ROLE='';LOADED=false;D=null;try{localStorage.removeItem('apKey')}catch(e){}$('sm').classList.remove('on');hideSide();say('');gate(msg)}
 function p2(n){return ('0'+n).slice(-2)}
 function fri(c,n){var p=c.split('-'),d=new Date(Date.UTC(+p[0],+p[1]-1,+p[2]+n));return d.getUTCFullYear()+'-'+p2(d.getUTCMonth()+1)+'-'+p2(d.getUTCDate())}
 function rosterAtJs(eff,strict){var pick=null;D.snaps.forEach(function(s){if(strict?s.eff<eff:s.eff<=eff)pick=s});if(!pick&&!strict&&D.snaps.length)pick=D.snaps[0];return pick?pick.rows:[]}
@@ -1039,38 +1053,47 @@ function xsBind(){Array.prototype.forEach.call(document.querySelectorAll('#smb .
   api('apiSetExclude',KEY,CY,n,!on).then(function(){D.settings['xstat|'+CY+'|'+n]=on?'N':'Y';t.classList.toggle('on',on);t.setAttribute('aria-checked',on);t.parentNode.querySelector('span').textContent=t.parentNode.querySelector('span').textContent.split(' · ')[0]+' · '+(on?'통계 포함':'통계 제외');toast(on?'통계에 포함했어요':'통계에서 제외했어요');render()},function(e){toast(errText(e),true)})}})}
 function kt(ts){var d=new Date(ts+9*3600000);return (d.getUTCMonth()+1)+'/'+d.getUTCDate()+' '+p2(d.getUTCHours())+':'+p2(d.getUTCMinutes())}
 function shSec(){var cs=cycles();
-  return '<div class="sm-sec"><h4>응답 시트</h4><div class="d">구글 시트에 쌓인 원본 응답이에요. 주차를 고르거나 이름으로 찾을 수 있어요.</div><div class="sar" style="margin-bottom:8px"><select class="fld" id="shw">'+cs.map(function(c){return '<option value="'+c+'"'+(c===CY?' selected':'')+'>'+esc(wlabel(c))+' · '+c.slice(5).replace('-','/')+' 금</option>'}).join('')+'</select></div><input class="fld" id="shq" placeholder="이름 검색" autocomplete="off" style="margin-bottom:8px"><div class="shw"><div id="sht"></div></div>'+(D.sheetUrl?'<a class="pl full" style="margin-top:10px;text-decoration:none" href="'+esc(D.sheetUrl)+'" target="_blank" rel="noopener">구글 시트에서 열기</a>':'')+'</div>'}
+  return '<div class="sm-sec"><h4>원본 응답</h4><div class="d">구글 시트에 쌓인 원본 응답이에요. 주차를 고르거나 이름으로 찾을 수 있어요.</div><div class="sar" style="margin-bottom:8px"><select class="fld" id="shw">'+cs.map(function(c){return '<option value="'+c+'"'+(c===CY?' selected':'')+'>'+esc(wlabel(c))+' · '+c.slice(5).replace('-','/')+' 금</option>'}).join('')+'</select></div><input class="fld" id="shq" placeholder="이름 검색" autocomplete="off" style="margin-bottom:8px"><div class="shw"><div id="sht"></div></div>'+(D.sheetUrl?'<a class="pl full" style="margin-top:10px;text-decoration:none" href="'+esc(D.sheetUrl)+'" target="_blank" rel="noopener">구글 시트에서 열기</a>':'')+'</div>'}
 function shBind(){function d(){var c=$('shw').value,q=$('shq').value.trim(),rs=D.responses.filter(function(r){return r.cycle===c&&(!q||r.name.indexOf(q)>-1)}).sort(function(a,z){return z.ts-a.ts}),me=isME(c);
   $('sht').innerHTML='<table class="sht"><thead><tr><th>제출</th><th>지점</th><th>성함</th><th>예정</th>'+(me?'<th>건/MIP</th>':'')+'<th>비고</th></tr></thead><tbody>'+(rs.length?rs.map(function(r){var nt=[];if(r.extra)nt.push('명단외');if(r.late)nt.push('마감후');if(r.extra&&(D.settings||{})['xstat|'+c+'|'+r.name]==='Y')nt.push('통계제외');return '<tr><td>'+kt(r.ts)+'</td><td>'+r.branch+'</td><td>'+esc(r.name)+'</td><td>'+(r.days.length?r.days.join(''):'없음')+'</td>'+(me?'<td>'+(r.contracts==null?'-':r.contracts+'/'+r.mip)+'</td>':'')+'<td>'+nt.join(' · ')+'</td></tr>'}).join(''):'<tr><td colspan="6" style="text-align:center;color:var(--mut)">응답이 없어요</td></tr>')+'</tbody></table><div class="d" style="margin:8px 0 0">총 '+rs.length+'건</div>'}
   $('shw').onchange=d;$('shq').oninput=d;d()}
-function openSettings(){
-  var h='';
-  if(ROLE==='edit'){
+var VIEW='dash',VMAP={'#roster':'roster','#resp':'resp','#key':'key'};
+try{VIEW=VMAP[location.hash]||'dash'}catch(e){}
+var PG={roster:{e:'TEAM',t:'팀 명단',d:''},resp:{e:'RESPONSES',t:'응답 데이터',d:'원본 응답을 확인하고, 명단 밖 응답을 통계에 넣을지 정해요.'},key:{e:'ACCESS',t:'접근 키',d:'관리자 페이지에 들어올 때 쓰는 키를 관리해요.'}};
+function render(){if(VIEW==='dash')renderDash();else{var y=window.scrollY;renderPage(VIEW);window.scrollTo(0,y)}}
+function navInit(){var N={nvd:['home','대시보드'],nvr:['users','팀 명단'],nvp:['rows','응답 데이터'],nvk:['lock','접근 키']};
+  Object.keys(N).forEach(function(k){$(k).innerHTML=ICO[N[k][0]]+'<span class="t">'+N[k][1]+'</span>';$(k).onclick=function(){go($(k).dataset.v)}});
+  window.addEventListener('hashchange',function(){var v=VMAP[location.hash]||'dash';if(LOADED&&v!==VIEW&&(v==='dash'||ROLE==='edit'))go(v,true)})}
+function navShow(){['nvr','nvp','nvk'].forEach(function(k){$(k).style.display=ROLE==='edit'?'':'none'});if(ROLE!=='edit'&&VIEW!=='dash')VIEW='dash';navAct()}
+function navAct(){[].forEach.call(document.querySelectorAll('.side .nv'),function(b){b.classList.toggle('act',b.dataset.v===VIEW)})}
+function go(v,fromHash){VIEW=v;if(!fromHash){try{history.replaceState(null,'',v==='dash'?location.pathname+location.search:'#'+v)}catch(e){location.hash=v==='dash'?'':v}}navAct();render();window.scrollTo(0,0)}
+function pgWeek(){var cs=cycles();return '<div class="pgw"><span>기준 주차</span><select class="fld" id="pgw">'+cs.map(function(c){return '<option value="'+c+'"'+(c===CY?' selected':'')+'>'+esc(wlabel(c))+' · '+c.slice(5).replace('-','/')+' 금</option>'}).join('')+'</select></div>'}
+function renderPage(v){
+  var h='',m=PG[v];
+  if(v==='roster'){
     var es={};D.snaps.forEach(function(s){es[s.eff]=1});es[D.cycle]=1;for(var kk=1;kk<=7;kk++)es[fri(D.cycle,7*kk)]=1;var el=Object.keys(es).sort().reverse(),have={};D.snaps.forEach(function(s){have[s.eff]=1});
-    h+='<div class="sm-sec"><h4>명단 관리</h4><div class="d">이름을 직접 입력해 <b>추가·제외</b>하거나 목록에서 눌러 제외/복구해요. 선택한 <b>적용 주차부터</b> 반영되고 이전 주차는 그대로예요.</div>'+
+    h+='<div class="sm-sec"><div class="d">이름을 직접 입력해 <b>추가·제외</b>하거나 목록에서 눌러 제외/복구해요. 선택한 <b>적용 주차부터</b> 반영되고 이전 주차는 그대로예요.</div>'+
       '<select class="fld" id="smw" style="margin-bottom:8px">'+el.map(function(e){return '<option value="'+e+'"'+(e===D.cycle?' selected':'')+'>'+esc(wlabel(e))+' · '+e.slice(5).replace('-','/')+' 금'+(have[e]?' · 저장됨':'')+'</option>'}).join('')+'</select>'+
       '<div class="sadd"><div class="smmd" id="smmd"><button data-m="add">추가</button><button data-m="del">제외</button></div><div class="sbr" id="smb3"></div><div class="sar"><input class="fld" id="sma" placeholder="새 이름 입력 (여러 명은 띄어쓰기·쉼표로)" autocomplete="off" enterkeyhint="done"><button class="pl" id="smab">추가</button></div><div class="sgl" id="smsg"></div></div><div id="smc"></div>'+
       '<details class="smd"><summary>엑셀에서 한 번에 붙여넣기</summary><textarea class="fld" id="smt" spellcheck="false"></textarea><div class="d" style="margin:8px 0 0">한 줄에 <b>지점번호 이름</b> (1 TREASURE · 2 HEXAGON · 3 A-ONE). 빼려면 이름 뒤에 <b>제외</b>.</div></details>'+
-      '<div class="smbar"><div class="smp" id="smp"></div><button class="pl pri full" id="smsv">명단 저장</button></div></div>';
-    var cur=D.cycle,sv=D.settings['monthend|'+cur],on=sv==='Y'?true:sv==='N'?false:fri(cur,7).slice(0,7)!==cur.slice(0,7);
-    h+='<div class="sm-sec"><h4>예상 설문 (월말)</h4><div class="sw"><div><b>'+esc(wlabel(cur))+' · 다음 달 예상 설문</b><span>켜면 예상 계약(건)·MIP를 함께 받아요</span></div><i id="smm" class="'+(on?'on':'')+'" role="switch" aria-checked="'+on+'"></i></div></div>'+
-      xsSec()+shSec()+
-      '<div class="sm-sec"><h4>접속 키</h4><div class="d">관리자 페이지에 들어올 때 쓰는 키예요. <b>비워서 저장하면 키 없이 누구나 열 수 있어요.</b> 링크가 공개돼 있으니 키를 걸어두는 걸 권장해요.</div><div class="sm-row" style="margin-bottom:8px"><input class="fld" id="smkv" placeholder="새 접속 키 (4자 이상, 공백 없이)" autocomplete="off"></div><button class="pl full" id="smkb">접속 키 저장</button></div>';
-  }
-  if(KEY&&KEY!=='-')h+='<div class="sm-sec"><button class="pl full" id="smo">나가기</button><div class="d" style="margin:8px 0 0;text-align:center">이 기기에 저장된 키를 지워요</div></div>';
-  $('smb').innerHTML=h;if($('smo'))$('smo').onclick=function(){logout('')};
-  if(ROLE==='edit'){
+      '<div class="smbar"><div class="smp" id="smp"></div><button class="pl pri full" id="smsv">명단 저장</button></div></div>'}
+  else if(v==='resp'){h+=pgWeek()+xsSec()+shSec()}
+  else if(v==='key'){
+    h+='<div class="sm-sec"><div class="d">링크가 공개돼 있어서 키를 걸어두는 걸 권장해요. <b>비워서 저장하면 키 없이 누구나 열 수 있어요.</b></div><div class="sm-row" style="margin-bottom:8px"><input class="fld" id="smkv" placeholder="새 접근 키 (4자 이상, 공백 없이)" autocomplete="off"></div><button class="pl full" id="smkb">접근 키 저장</button></div>';
+    if(KEY&&KEY!=='-')h+='<div class="sm-sec"><button class="pl full" id="smo">이 기기에서 나가기</button><div class="d" style="margin:8px 0 0;text-align:center">이 기기에 저장된 키를 지워요</div></div>'}
+  say('<div class="pg"><div class="pgh"><div class="eyb">'+m.e+'</div><h1>'+m.t+'</h1>'+(m.d?'<p>'+m.d+'</p>':'')+'</div><div class="pgc" id="smb">'+h+'</div></div>');
+  if($('smo'))$('smo').onclick=function(){logout('')};
+  if($('pgw'))$('pgw').onchange=function(){CY=$('pgw').value;render()};
+  if(v==='roster'){
     $('smt').value=smFill($('smw').value);smDraw();smUpdate();
     $('smw').onchange=function(){$('smt').value=smFill($('smw').value);smDraw();smUpdate()};$('smt').oninput=function(){smDraw();smUpdate()};$('smab').onclick=smAdd;$('sma').oninput=smSug;$('sma').addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();smAdd()}});
     $('smsv').onclick=function(){var pr=smParse($('smt').value);if(pr.errs.length||!pr.rows.length)return;$('smsv').disabled=true;
-      api('apiSaveRoster',KEY,$('smw').value,pr.rows).then(function(r){toast(r.count+'명 저장했어요');return load(true)},function(e){toast(errText(e),true)}).then(function(){if($('sm').classList.contains('on'))openSettings()})};
-    $('smm').onclick=function(){var t=$('smm'),n=!t.classList.contains('on');api('apiSetMonthEnd',KEY,D.cycle,n).then(function(){D.settings['monthend|'+D.cycle]=n?'Y':'N';t.classList.toggle('on',n);t.setAttribute('aria-checked',n);toast(n?'월말 설문을 켰어요':'월말 설문을 껐어요');load(true)},function(e){toast(errText(e),true)})};
-    $('smkb').onclick=function(){var v=$('smkv').value.trim();if(v&&!confirm('접속 키를 바꿀까요?'))return;if(!v&&!confirm('키를 해제하면 링크를 아는 누구나 관리자 페이지를 열 수 있어요. 해제할까요?'))return;
-      api('apiSetAccessKey',KEY,v).then(function(){if(v){KEY=v;try{localStorage.setItem('apKey',v)}catch(x){}}else{KEY='-';try{localStorage.removeItem('apKey')}catch(x){}}$('smkv').value='';toast(v?'접속 키를 바꿨어요':'접속 키를 해제했어요')},function(x){toast(errText(x),true)})};
-    xsBind();shBind()}
-  $('sm').classList.add('on')}
+      api('apiSaveRoster',KEY,$('smw').value,pr.rows).then(function(r){toast(r.count+'명 저장했어요');return load(true)},function(e){toast(errText(e),true);$('smsv').disabled=false})}}
+  if(v==='resp'){xsBind();shBind()}
+  if(v==='key'){$('smkb').onclick=function(){var v2=$('smkv').value.trim();if(v2&&!confirm('접근 키를 바꿀까요?'))return;if(!v2&&!confirm('키를 해제하면 링크를 아는 누구나 관리자 페이지를 열 수 있어요. 해제할까요?'))return;
+      api('apiSetAccessKey',KEY,v2).then(function(){if(v2){KEY=v2;try{localStorage.setItem('apKey',v2)}catch(x){}}else{KEY='-';try{localStorage.removeItem('apKey')}catch(x){}}$('smkv').value='';toast(v2?'접근 키를 바꿨어요':'접근 키를 해제했어요');renderPage('key')},function(x){toast(errText(x),true)})}}}
 function dot(i){return '<i class="td" style="background:var(--b'+(i%3+1)+')"></i>'}
-function render(){
+function renderDash(){
   var C=calc(CY),cs=cycles(),late=D.now>new Date(CY+'T17:00:00+09:00').getTime(),cur=CY===D.cycle;
   var h='<div class="hdr"><div class="hnow" id="tmt"></div><h1 class="ttl">LAS AP Check</h1><div class="hwk"><div class="wkt"><b>'+esc(wlabel(CY))+'</b><span>·</span><span>'+esc(rng2(CY))+'</span></div><button class="pl wp" id="wpick">주차 선택'+ICO.chd+'</button></div><div class="hdl" id="hdl"></div></div>';
   h+='<div class="seg" id="tabs"><button data-t="all" class="'+(TAB==='all'?'on':'')+'">전체</button>'+C.bs.map(function(b,i){return '<button data-t="'+i+'" class="'+(String(i)===TAB?'on':'')+'">'+dot(i)+esc(b.team)+'</button>'}).join('')+'</div>';
