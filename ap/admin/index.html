@@ -433,6 +433,7 @@ html[data-theme=light] .d7 i.on{color:#fff}
 .nt .nb b{display:block;font-size:14px;font-weight:700;letter-spacing:-.02em;line-height:1.25}
 .nt .nb span{display:block;font-size:12px;color:var(--mut);line-height:1.3;margin-top:1px}
 .nt .ib{width:56px;height:56px;border-radius:20px;border:0;flex:none}
+.rts{display:flex;flex:none;align-items:center;gap:2px;padding:4px;border-radius:20px;background:var(--card);height:56px}.rts button{border:0;background:transparent;color:var(--mut);font:600 13px inherit;font-family:inherit;padding:0 14px;height:100%;border-radius:16px;cursor:pointer}.rts button.on{background:var(--fg);color:var(--bg)}
 
 .wl{display:grid;gap:8px;margin-top:6px}
 .wi{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 12px;align-items:center;text-align:left;padding:14px 16px;border-radius:18px;background:var(--card2);width:100%}
@@ -504,6 +505,7 @@ body:before,body:after{display:none}
 .nt .nb svg{stroke:var(--fg)}
 .nt .nb span{display:none}
 .nt .ib{width:52px;height:52px;border-radius:50%;background:transparent;border:1px solid var(--ln2)}
+.rts{height:52px;border-radius:99px;background:transparent;border:1px solid var(--ln2)}.rts button{border-radius:99px}
 .sec{margin:44px 0 6px;font-size:12px;letter-spacing:.2em;color:var(--mut);font-weight:700;text-transform:uppercase}
 .sech{margin:44px 0 12px}
 
@@ -1032,12 +1034,14 @@ function makeNoticeV(v){
 function makeNoticeA(){return makeNoticeV(1)}
 function fontsReady(cb){var done=false;function go(){if(!done){done=true;cb()}}setTimeout(go,2200);
   try{Promise.all(['800 60px Paperlogy','600 24px Paperlogy','400 24px Paperlogy','300 60px Manrope','400 24px Manrope','600 24px Manrope','700 24px Manrope','300 60px "Pretendard Variable"','500 24px "Pretendard Variable"','700 24px "Pretendard Variable"'].map(function(f){return document.fonts.load(f,'가0A')})).then(go,go)}catch(e){go()}}
-function repName(k){var C=calc(CY);if(k==='noticeA')return 'AP체크_공지용_응답률_A안_'+CY.replace(/-/g,'')+'_'+today8()+'.png';if(k==='notice')return 'AP체크_공지용_응답률_'+CY.replace(/-/g,'')+'_'+today8()+'.png';return 'AP체크_'+(k==='all'?'전체현황':C.bs[k].team+'_현황')+'_'+CY.replace(/-/g,'')+'_'+today8()+'.png'}
-function repBlob(k){return new Promise(function(res){fontsReady(function(){makeReport(k).toBlob(res,'image/png')})})}
+function repName(k){var C=calc(CY),tt=rtv()==='dark'?'다크':'라이트';if(k==='noticeA')return 'AP체크_공지용_응답률_A안_'+CY.replace(/-/g,'')+'_'+tt+'_'+today8()+'.png';if(k==='notice')return 'AP체크_공지용_응답률_'+CY.replace(/-/g,'')+'_'+tt+'_'+today8()+'.png';return 'AP체크_'+(k==='all'?'전체현황':C.bs[k].team+'_현황')+'_'+CY.replace(/-/g,'')+'_'+tt+'_'+today8()+'.png'}
+var RT=null;function rtv(){return RT||document.documentElement.getAttribute('data-theme')||'light'}
+function repBlob(k){return new Promise(function(res){fontsReady(function(){var el=document.documentElement,o=el.getAttribute('data-theme'),t=rtv(),cv;el.setAttribute('data-theme',t);try{cv=makeReport(k)}finally{el.setAttribute('data-theme',o)}cv.toBlob(res,'image/png')})})}
 function repCopy(k){var p=repBlob(k);
   try{navigator.clipboard.write([new ClipboardItem({'image/png':p})]).then(function(){toast('이미지를 복사했어요')},function(){repPreview(p,k)})}catch(e){repPreview(p,k)}}
 function repSave(k){repBlob(k).then(function(b){var u=URL.createObjectURL(b),a=document.createElement('a');a.href=u;a.download=repName(k);document.body.appendChild(a);a.click();a.remove();toast('이미지를 저장했어요');setTimeout(function(){URL.revokeObjectURL(u)},5000)})}
 function repPreview(p,k){Promise.resolve(p).then(function(b){var im=$('rpi');if(im.dataset.u)URL.revokeObjectURL(im.dataset.u);var u=URL.createObjectURL(b);im.dataset.u=u;im.src=u;$('rpd').onclick=function(){var a=document.createElement('a');a.href=u;a.download=repName(k);document.body.appendChild(a);a.click();a.remove()};$('rpm').classList.add('on')})}
+function RTS(){var t=rtv();return '<div class="rts" id="rts"><button data-t="light" class="'+(t==='light'?'on':'')+'">라이트</button><button data-t="dark" class="'+(t==='dark'?'on':'')+'">다크</button></div>'}
 function repBind(){$('rpx').onclick=function(){$('rpm').classList.remove('on')};$('rpm').addEventListener('click',function(e){if(e.target===$('rpm'))$('rpm').classList.remove('on')})}
 
 
@@ -1177,7 +1181,7 @@ function renderDash(){
   var C=calc(CY),cs=cycles(),late=D.now>new Date(CY+'T17:00:00+09:00').getTime(),cur=CY===D.cycle;
   var h='<div class="hdr"><div class="hnow" id="tmt"></div><h1 class="ttl">LAS AP Check</h1><div class="hwk"><div class="wkt"><b>'+esc(wlabel(CY))+'</b><span>·</span><span>'+esc(wsub(CY))+'</span></div><button class="pl wp" id="wpick">주차 선택'+ICO.chd+'</button></div><div class="hdl" id="hdl"></div></div>';
   h+='<div class="seg" id="tabs"><button data-t="all" class="'+(TAB==='all'?'on':'')+'">전체</button>'+C.bs.map(function(b,i){return '<button data-t="'+i+'" class="'+(String(i)===TAB?'on':'')+'">'+dot(i)+esc(b.team)+'</button>'}).join('')+'</div>';
-  h+=TAB==='all'?'<div class="nt"><button class="nb" id="bnt">'+ICO.mg+'<div><b>공지용 이미지 복사</b><span>전체 응답률'+(C.me?' + 월별 통계':'')+' · 지점별 응답률 · 최대 화질</span></div></button><button class="ib" id="bns" aria-label="공지용 이미지 저장">'+ICO.dl+'</button></div>':'<div class="nt"><button class="nb" id="bnt">'+ICO.mg+'<div><b>'+esc(C.bs[+TAB].team)+' 이미지 복사</b><span>이 지점 현황만 · 최대 화질</span></div></button><button class="ib" id="bns" aria-label="지점 이미지 저장">'+ICO.dl+'</button></div>';
+  h+=TAB==='all'?'<div class="nt"><button class="nb" id="bnt">'+ICO.mg+'<div><b>공지용 이미지 복사</b><span>전체 응답률'+(C.me?' + 월별 통계':'')+' · 지점별 응답률 · 최대 화질</span></div></button>'+RTS()+'<button class="ib" id="bns" aria-label="공지용 이미지 저장">'+ICO.dl+'</button></div>':'<div class="nt"><button class="nb" id="bnt">'+ICO.mg+'<div><b>'+esc(C.bs[+TAB].team)+' 이미지 복사</b><span>이 지점 현황만 · 최대 화질</span></div></button>'+RTS()+'<button class="ib" id="bns" aria-label="지점 이미지 저장">'+ICO.dl+'</button></div>';
   h+=TAB==='all'?allView(C):'<div class="brv" style="--bc:var(--b'+(+TAB%3+1)+')">'+brView(C.bs[+TAB],C)+'</div>';
   say(h);
   $('tmt').textContent=nowTxt(D.now)+' 기준';$('hdl').innerHTML=(cur?'<span class="mark ac">진행 중</span>':'')+(C.me?'<span class="mark">'+nextMon(CY)+'월 예상</span>':'');
@@ -1187,6 +1191,7 @@ function renderDash(){
   [].forEach.call(document.querySelectorAll('[data-vw]'),function(b){b.onclick=function(){VW=b.dataset.vw;render()}});
   [].forEach.call(document.querySelectorAll('[data-xl]'),function(b){b.onclick=function(){copy(decodeURIComponent(b.dataset.xl)).then(function(){toast('이름·금액을 복사했어요 · 엑셀 칸에 붙여넣기')})}});[].forEach.call(document.querySelectorAll('[data-add]'),function(b){b.onclick=function(){var p=b.dataset.add.split('|');addToRoster(p[0],+p[1])}});[].forEach.call(document.querySelectorAll('[data-drop]'),function(b){b.onclick=function(){if(b.dataset.armed){dropFromRoster(b.dataset.drop)}else{b.dataset.armed='1';b.classList.add('arm');b.textContent=b.dataset.drop+' · 제외?';setTimeout(function(){if(b.isConnected){b.dataset.armed='';b.classList.remove('arm');b.textContent=b.dataset.drop}},2600)}}});[].forEach.call(document.querySelectorAll('[data-cp]'),function(b){b.onclick=function(){copy(b.dataset.cp).then(function(){toast('미응답 명단을 복사했어요')})}});
   $('blink').onclick=function(){if(D)copy(location.href.replace(/admin\/?(index\.html)?([?#].*)?$/,'')).then(function(){toast('설문 링크를 복사했어요')});else toast('설문 링크는 배포 후 연결돼요')};
+  Array.prototype.forEach.call(document.querySelectorAll('#rts button'),function(b){b.onclick=function(){RT=b.dataset.t;Array.prototype.forEach.call(document.querySelectorAll('#rts button'),function(x){x.classList.toggle('on',x===b)})}});
   $('bnt').onclick=function(){repCopy(TAB==='all'?'notice':+TAB)};$('bns').onclick=function(){repSave(TAB==='all'?'notice':+TAB)};
   $('bcp').onclick=function(){repCopy(TAB==='all'?'all':+TAB)};$('bsv').onclick=function(){repSave(TAB==='all'?'all':+TAB)}}
 var PM=null;
