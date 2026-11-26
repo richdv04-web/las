@@ -581,7 +581,29 @@ body:before,body:after{display:none}
 .sw i.xsw{cursor:pointer}
 .shw{max-height:340px;overflow:auto;border-radius:14px;background:var(--card2)}
 .sht{width:100%;border-collapse:collapse;font-size:12.5px;white-space:nowrap}.sht th,.sht td{padding:9px 10px;text-align:left;border-bottom:1px solid var(--ln)}.sht th{position:sticky;top:0;background:var(--card2);font-weight:600;color:var(--mut);font-size:12px}
-</style></head><body><header class="top"><div class="in"><span class="wm">L.A.S<i></i></span><span class="sp"></span><button class="pl" id="blink" aria-label="설문 링크"></button><button class="pl pri" id="bcp" aria-label="이미지 복사"></button><button class="pl" id="bsv" aria-label="저장"></button><span class="vs"></span><button class="ib" id="bset" aria-label="설정" style="display:none"></button><button class="ib" id="bref" aria-label="새로고침"></button><button class="ib" id="thm"></button></div></header>
+
+/* 사이드바 + 넓은 화면 */
+.side{position:fixed;left:0;top:0;bottom:0;width:264px;padding:16px 12px;background:var(--bg);border-right:1px solid var(--ln);z-index:50;transform:translateX(-102%);transition:transform .3s cubic-bezier(.32,.72,0,1);display:flex;flex-direction:column;gap:4px;overflow:auto}
+body.so .side{transform:none}
+.side .sgh{height:44px;display:flex;align-items:center;padding:0 10px;margin-bottom:6px}
+.side .sg{font-size:11px;letter-spacing:.14em;color:var(--faint);font-weight:700;margin:16px 10px 6px}
+.side .pl{width:100%;height:46px;padding:0 14px;border-radius:14px;border-color:transparent;background:transparent;justify-content:flex-start;gap:12px;font-size:14px}
+.side .pl svg{width:18px;height:18px;flex:none}
+.side .pl:hover{background:var(--card2)}
+.side .pl.pri{background:var(--pill);color:var(--onpill);border-color:var(--pill);margin-bottom:2px}
+.side .pl .t{display:inline}
+.scrim{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:45;opacity:0;pointer-events:none;transition:opacity .25s}
+body.so .scrim{opacity:1;pointer-events:auto}
+body{transition:padding-left .3s cubic-bezier(.32,.72,0,1)}
+.top .in{gap:8px}
+@media(min-width:1000px){
+ :root{--mw:1180px}
+ body.so{padding-left:264px}
+ body.so .scrim{opacity:0;pointer-events:none}
+ .side{box-shadow:none}
+ .top .in{padding:0 28px}.wrap{padding:10px 28px 110px}
+}
+</style></head><body><aside class="side" id="side"><div class="sgh"><span class="wm">L.A.S<i></i></span></div><div class="sg">공유</div><button class="pl" id="blink" aria-label="설문 링크"></button><button class="pl pri" id="bcp" aria-label="이미지 복사"></button><button class="pl" id="bsv" aria-label="저장"></button><div class="sg">관리</div><button class="pl" id="bset" aria-label="설정" style="display:none"></button><button class="pl" id="bref" aria-label="새로고침"></button></aside><div class="scrim" id="scrim"></div><header class="top"><div class="in"><button class="ib" id="sbt" aria-label="사이드바" style="display:none"></button><button class="ib" id="thm"></button><span class="sp"></span><span class="wm">L.A.S<i></i></span></div></header>
 <main class="wrap" id="root"><div class="sk"></div><div class="sk" style="width:60%"></div><div class="sk" style="height:160px;border-radius:20px"></div></main>
 <div class="mo" id="wm"><div class="sh"><div class="hd2"><h3 style="margin:0">주차 선택</h3><button class="xb" id="wx" aria-label="닫기"></button></div><div class="sub">금요일 기준 주차 · 신청일 다음 주 월~일 AP</div><input class="fld" id="wq" placeholder="월 바로가기 (예: 202612)" inputmode="numeric" autocomplete="off" maxlength="7" style="margin-bottom:10px"><div class="wl" id="wl"></div></div></div>
 <div class="mo" id="rpm"><div class="sh"><h3>이미지</h3><div class="sub">복사가 막혀 있으면 이미지를 길게 눌러 복사하거나 저장해 주세요.</div><img id="rpi" alt="" style="width:100%;display:block;border-radius:14px;border:1px solid var(--ln);min-height:120px"><div style="display:flex;gap:8px;margin-top:14px"><button class="pl" id="rpx" style="flex:1;justify-content:center;height:46px">닫기</button><button class="pl pri" id="rpd" style="flex:1;justify-content:center;height:46px">저장</button></div></div></div>
@@ -668,6 +690,7 @@ var ICO={
  dl:'<svg viewBox="0 0 24 24"><path d="M12 4v11m0 0-4-4m4 4 4-4M5 20h14"/></svg>',
  chd:'<svg viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg>',
  x:'<svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg>',
+ pn:'<svg viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="14" rx="3"/><path d="M9.5 5v14"/></svg>',
  mg:'<svg viewBox="0 0 24 24"><path d="M4 10v4a1 1 0 0 0 1 1h2.5L14 19V5L7.5 9H5a1 1 0 0 0-1 1zM17.5 9.5a4 4 0 0 1 0 5"/></svg>'};
 function setTheme(t){document.documentElement.setAttribute('data-theme',t);try{localStorage.setItem('apTheme',t)}catch(e){}icoTheme()}
 function curTheme(){return document.documentElement.getAttribute('data-theme')||'dark'}
@@ -942,12 +965,12 @@ function repBind(){$('rpx').onclick=function(){$('rpm').classList.remove('on')};
 var D=null,CY=null,TAB='all',VW='person',LOADED=false,KEY='',ROLE='';
 function say(h){$('root').innerHTML=h}
 function boot(){
-  $('bref').innerHTML=ICO.ref;$('bset').innerHTML=ICO.gear;$('bset').onclick=openSettings;$('smx').innerHTML=ICO.x;$('smx').onclick=function(){$('sm').classList.remove('on')};$('blink').innerHTML=ICO.link+'<span class="t">설문 링크</span>';$('bcp').innerHTML=ICO.cp+'<span class="t">이미지 복사</span>';$('bsv').innerHTML=ICO.dl+'<span class="t">저장</span>';bindTheme();repBind();
+  $('bref').innerHTML=ICO.ref+'<span class="t">새로고침</span>';$('bset').innerHTML=ICO.gear+'<span class="t">설정</span>';$('sbt').innerHTML=ICO.pn;initSide();$('bset').onclick=openSettings;$('smx').innerHTML=ICO.x;$('smx').onclick=function(){$('sm').classList.remove('on')};$('blink').innerHTML=ICO.link+'<span class="t">설문 링크</span>';$('bcp').innerHTML=ICO.cp+'<span class="t">이미지 복사</span>';$('bsv').innerHTML=ICO.dl+'<span class="t">저장</span>';bindTheme();repBind();
   $('bref').onclick=function(){load()};$('wx').innerHTML=ICO.x;$('wx').onclick=function(){$('wm').classList.remove('on')};$('wm').addEventListener('click',function(e){if(e.target===$('wm'))$('wm').classList.remove('on')});
   gateBind();start();document.addEventListener('visibilitychange',function(){if(!document.hidden&&LOADED)load(true)});
   setInterval(function(){if(!document.hidden&&!document.querySelector('.mo.on')&&LOADED)load(true)},60000)}
 function load(silent){if(!KEY)return Promise.resolve();
-  return api('apiDashboard',KEY).then(function(d){D=d;ROLE=d.role||ROLE;$('bset').style.display='';LOADED=true;var cs=cycles();if(!CY||cs.indexOf(CY)<0){var hv=cs.filter(function(c){return D.responses.some(function(r){return r.cycle===c})});CY=hv[0]||D.cycle||cs[0]}render()},function(e){
+  return api('apiDashboard',KEY).then(function(d){D=d;ROLE=d.role||ROLE;$('bset').style.display='';showSide();LOADED=true;var cs=cycles();if(!CY||cs.indexOf(CY)<0){var hv=cs.filter(function(c){return D.responses.some(function(r){return r.cycle===c})});CY=hv[0]||D.cycle||cs[0]}render()},function(e){
     if(/unauthorized/.test(errText(e))){var m0=TRYOPEN?'':'키가 맞지 않거나 변경됐어요';TRYOPEN=false;logout(m0);return}
     if(!silent)say('<div class="empty">불러오지 못했어요.<br>'+esc(errText(e))+'<br><br><button class="pl" onclick="load()">다시 시도</button></div>');else toast('새로고침에 실패했어요',true)})}
 
@@ -957,7 +980,7 @@ function gate(msg){$('gate').classList.add('on');$('gk').value='';$('ge').textCo
 function enter(){var k=$('gk').value.trim();if(!k)return;$('gb').disabled=true;$('ge').textContent='';
   api('apiAuth',k).then(function(r){KEY=k;ROLE=r.role;try{localStorage.setItem('apKey',k)}catch(e){}$('gate').classList.remove('on');say('<div class="sk"></div><div class="sk" style="width:60%"></div><div class="sk" style="height:160px;border-radius:20px"></div>');load()},
     function(e){var m=errText(e);$('ge').textContent=m==='unauthorized'?'키가 맞지 않아요':m;$('gb').disabled=false})}
-function logout(msg){KEY='';ROLE='';LOADED=false;D=null;try{localStorage.removeItem('apKey')}catch(e){}$('sm').classList.remove('on');$('bset').style.display='none';say('');gate(msg)}
+function logout(msg){KEY='';ROLE='';LOADED=false;D=null;try{localStorage.removeItem('apKey')}catch(e){}$('sm').classList.remove('on');$('bset').style.display='none';hideSide();say('');gate(msg)}
 function p2(n){return ('0'+n).slice(-2)}
 function fri(c,n){var p=c.split('-'),d=new Date(Date.UTC(+p[0],+p[1]-1,+p[2]+n));return d.getUTCFullYear()+'-'+p2(d.getUTCMonth()+1)+'-'+p2(d.getUTCDate())}
 function rosterAtJs(eff,strict){var pick=null;D.snaps.forEach(function(s){if(strict?s.eff<eff:s.eff<=eff)pick=s});if(!pick&&!strict&&D.snaps.length)pick=D.snaps[0];return pick?pick.rows:[]}
@@ -1064,6 +1087,14 @@ function render(){
   $('bnt').onclick=function(){repCopy('notice')};$('bns').onclick=function(){repSave('notice')};
   $('bcp').onclick=function(){repCopy(TAB==='all'?'all':+TAB)};$('bsv').onclick=function(){repSave(TAB==='all'?'all':+TAB)}}
 var PM=null;
+
+var SIDE_ON=false;
+function setSide(o){document.body.classList.toggle('so',o);try{localStorage.setItem('apSide',o?'1':'0')}catch(e){}}
+function initSide(){if(SIDE_ON)return;SIDE_ON=true;$('sbt').onclick=function(){setSide(!document.body.classList.contains('so'))};$('scrim').onclick=function(){setSide(false)};
+  document.addEventListener('keydown',function(e){if(e.key==='Escape'&&innerWidth<1000)setSide(false)});
+  [].forEach.call($('side').querySelectorAll('button'),function(b){b.addEventListener('click',function(){if(innerWidth<1000)setSide(false)})})}
+function showSide(){$('sbt').style.display='';var v=null;try{v=localStorage.getItem('apSide')}catch(e){}var o=innerWidth>=1000?(v==null?true:v==='1'):false;document.body.classList.toggle('so',o)}
+function hideSide(){$('sbt').style.display='none';document.body.classList.remove('so')}
 function openWeeks(){
   var gs={};cycles().forEach(function(c){var g=gstart(c);if(g)gs[g]=1});var gl=Object.keys(gs).sort();
   if(!PM||gl.indexOf(PM)<0)PM=gstart(CY)||gl[gl.length-1];
