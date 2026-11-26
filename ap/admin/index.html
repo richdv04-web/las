@@ -616,6 +616,9 @@ body{transition:padding-left .3s cubic-bezier(.32,.72,0,1)}
 @media(max-width:719px){.pgc{padding:4px 16px 18px;border-radius:20px}}
 .rsel{display:flex;gap:8px;margin-bottom:8px}.rsel #smw{flex:1;min-width:0}.rsel #rq{width:150px;flex:none}
 @media(max-width:480px){.rsel #rq{width:116px}}
+.pgw{display:block;padding:18px 0 4px}.pgw>span{display:block;font-size:13px;color:var(--mut);margin-bottom:8px}
+.wpk{margin-bottom:10px}.wpt{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px;margin-bottom:10px}.wpt .wq{height:46px;margin:0}.wpt .mn{margin:0}.wpl{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:8px}.wpl .wi.nop{width:100%}
+@media(max-width:560px){.wpt{grid-template-columns:1fr}.wpl{grid-template-columns:1fr}}
 </style></head><body><aside class="side" id="side"><div class="sgh"><span class="wm">L.A.S<i></i></span></div><div class="sg">메뉴</div><button class="pl nv act" id="nvd" data-v="dash"></button><button class="pl nv" id="nvr" data-v="roster" style="display:none"></button><button class="pl nv" id="nvp" data-v="resp" style="display:none"></button><button class="pl nv" id="nvk" data-v="key" style="display:none"></button><div class="sg">공유</div><button class="pl" id="blink" aria-label="설문 링크"></button><button class="pl pri" id="bcp" aria-label="이미지 복사"></button><button class="pl" id="bsv" aria-label="저장"></button><div class="sg">도구</div><button class="pl" id="bref" aria-label="새로고침"></button></aside><div class="scrim" id="scrim"></div><header class="top"><div class="in"><button class="ib" id="sbt" aria-label="사이드바" style="display:none"></button><button class="ib" id="thm"></button><span class="sp"></span><span class="wm">L.A.S<i></i></span></div></header>
 <main class="wrap" id="root"><div class="sk"></div><div class="sk" style="width:60%"></div><div class="sk" style="height:160px;border-radius:20px"></div></main>
 <div class="mo" id="wm"><div class="sh"><div class="hd2"><h3 style="margin:0">주차 선택</h3><button class="xb" id="wx" aria-label="닫기"></button></div><div class="sub">금요일 기준 주차 · 신청일 다음 주 월~일 AP</div><input class="fld" id="wq" placeholder="월 바로가기 (예: 202612)" inputmode="numeric" autocomplete="off" maxlength="7" style="margin-bottom:10px"><div class="wl" id="wl"></div></div></div>
@@ -638,7 +641,7 @@ function dm(s){var d=pd(s);return d.getDate()}
 function rng(c){return md(add(c,3))+' – '+md(add(c,9))}
 function ms(s){var d=pd(s);return (d.getMonth()+1)+'/'+d.getDate()}
 function rs(c){return ms(add(c,3))+'~'+ms(add(c,9))}
-function wsub(c){return 'AP '+rng2(c)+'  ·  마감 '+md2(c)}
+function wsub(c){return 'AP '+rng2(c)+'  ·  공지 '+md2(c)}
 function rng2(c){return md2(add(c,3))+' – '+md2(add(c,9))}
 function isME_(x){var v=(window.D&&D.settings||{})['monthend|'+x];return v==='Y'?true:v==='N'?false:isLastFri(x)}
 function thu(c){return pd(add(c,6))}
@@ -801,7 +804,7 @@ function makeReport(k){
       var rh=66,bh2=120+pl.length*rh+20;glass(c,T,P,y,IW,bh2,40);tx(c,'AP 예정',P+44,y+60,28,700,T.mut);tx(c,String(pl.length),W-P-44,y+62,52,300,T.fg,'right',-2);
       var dx=W-P-44-7*40+6;DAYS.forEach(function(d,i){tx(c,d,dx+i*40+17,y+104,18,700,i>4?T.faint:T.mut,'center')});
       pl.forEach(function(r,j){var ry=y+118+j*rh;c.fillStyle=T.ln;c.fillRect(P+44,ry,IW-88,1.5);
-        var nmw=mw(c,r.name,27,600);tx(c,r.name,P+44,ry+rh*.66,27,600,r.extra?T.ex:T.fg);var tg=r.extra?'명단외':(r.late?'마감후':'');if(tg)tx(c,tg,P+44+nmw+12,ry+rh*.66,18,700,r.extra?T.ex:T.acT);
+        var nmw=mw(c,r.name,27,600);tx(c,r.name,P+44,ry+rh*.66,27,600,r.extra?T.ex:T.fg);var tg=r.extra?'명단외':(r.late?'공지후':'');if(tg)tx(c,tg,P+44+nmw+12,ry+rh*.66,18,700,r.extra?T.ex:T.acT);
         DAYS.forEach(function(d,i){var on=r.days.indexOf(d)>-1,xx=dx+i*40;rr(c,xx,ry+14,34,38,10);if(on){c.fillStyle=T.b[B.i];c.fill()}else{c.strokeStyle=T.ln;c.lineWidth=2;c.stroke()}
           if(on)tx(c,d,xx+17,ry+40,18,700,T.dark?'#0D0D0D':'#FFFFFF','center')})});
       y+=bh2+20;
@@ -811,7 +814,7 @@ function makeReport(k){
         if(rs.length){glass(c,T,P,y,IW,bh4,40);tx(c,nextMon(CY)+'월 예상 · 개인별',P+44,y+60,28,700,T.mut);rs.forEach(function(r,j){var ry=y+90+j*rh;c.fillStyle=T.ln;c.fillRect(P+44,ry,IW-88,1.5);tx(c,r.name,P+44,ry+rh*.66,27,600,T.fg);tx(c,won(r.mip)+'만원',W-P-44,ry+rh*.66,27,600,T.fg,'right');tx(c,r.contracts+'건',W-P-44-mw(c,won(r.mip)+'만원',27,600)-24,ry+rh*.66,26,500,T.mut,'right')});y+=bh4+20}}
     }
     var notes=[];var ex=B?B.ext.length:C.extra;if(ex)notes.push(['명단 외 응답 '+ex+'명 포함 (명단·응답률에 반영)',T.ex]);var exx=B?B.extX.length:C.extraX;if(exx)notes.push(['통계 제외 '+exx+'명',T.mut]);
-    var lt=B?B.late:C.late;if(lt)notes.push(['마감 후 응답 '+lt+'명 포함',T.mut]);
+    var lt=B?B.late:C.late;if(lt)notes.push(['공지 후 응답 '+lt+'명 포함',T.mut]);
     y+=6;notes.forEach(function(n){tx(c,n[0],P+4,y+26,22,550,n[1]);y+=40});
     y+=40;tx(c,'L.A.S  AP CHECK',W/2,y,17,700,T.faint,'center',6);y+=P+6;return y}
   var s0=document.createElement('canvas');s0.width=W;s0.height=10;var H=Math.ceil(paint(s0.getContext('2d'),0));
@@ -1058,9 +1061,9 @@ function xsBind(){Array.prototype.forEach.call(document.querySelectorAll('#smb .
   api('apiSetExclude',KEY,CY,n,!on).then(function(){D.settings['xstat|'+CY+'|'+n]=on?'N':'Y';t.classList.toggle('on',on);t.setAttribute('aria-checked',on);t.parentNode.querySelector('span').textContent=t.parentNode.querySelector('span').textContent.split(' · ')[0]+' · '+(on?'통계 포함':'통계 제외');toast(on?'통계에 포함했어요':'통계에서 제외했어요');render()},function(e){toast(errText(e),true)})}})}
 function kt(ts){var d=new Date(ts+9*3600000);return (d.getUTCMonth()+1)+'/'+d.getUTCDate()+' '+p2(d.getUTCHours())+':'+p2(d.getUTCMinutes())}
 function shSec(){var cs=cycles();
-  return '<div class="sm-sec"><h4>원본 응답</h4><div class="d">구글 시트에 쌓인 원본 응답이에요. 주차를 고르거나 이름으로 찾을 수 있어요.</div><div class="sar" style="margin-bottom:8px"><select class="fld" id="shw">'+cs.map(function(c){return '<option value="'+c+'"'+(c===CY?' selected':'')+'>'+esc(wlabel(c))+' · AP '+rng(c)+' · 마감 '+md(c)+'</option>'}).join('')+'</select></div><input class="fld" id="shq" placeholder="이름 검색" autocomplete="off" style="margin-bottom:8px"><div class="shw"><div id="sht"></div></div>'+(D.sheetUrl?'<a class="pl full" style="margin-top:10px;text-decoration:none" href="'+esc(D.sheetUrl)+'" target="_blank" rel="noopener">구글 시트에서 열기</a>':'')+'</div>'}
+  return '<div class="sm-sec"><h4>원본 응답</h4><div class="d">구글 시트에 쌓인 원본 응답이에요. 주차를 고르거나 이름으로 찾을 수 있어요.</div>'+wpkHTML('shw',cs,CY)+'<input class="fld" id="shq" placeholder="이름 검색" autocomplete="off" style="margin-bottom:8px"><div class="shw"><div id="sht"></div></div>'+(D.sheetUrl?'<a class="pl full" style="margin-top:10px;text-decoration:none" href="'+esc(D.sheetUrl)+'" target="_blank" rel="noopener">구글 시트에서 열기</a>':'')+'</div>'}
 function shBind(){function d(){var c=$('shw').value,q=$('shq').value.trim(),rs=D.responses.filter(function(r){return r.cycle===c&&(!q||r.name.indexOf(q)>-1)}).sort(function(a,z){return z.ts-a.ts}),me=isME(c);
-  $('sht').innerHTML='<table class="sht"><thead><tr><th>제출</th><th>지점</th><th>성함</th><th>예정</th>'+(me?'<th>건/MIP</th>':'')+'<th>비고</th></tr></thead><tbody>'+(rs.length?rs.map(function(r){var nt=[];if(r.extra)nt.push('명단외');if(r.late)nt.push('마감후');if(r.extra&&(D.settings||{})['xstat|'+c+'|'+r.name]==='Y')nt.push('통계제외');return '<tr><td>'+kt(r.ts)+'</td><td>'+r.branch+'</td><td>'+esc(r.name)+'</td><td>'+(r.days.length?r.days.join(''):'없음')+'</td>'+(me?'<td>'+(r.contracts==null?'-':r.contracts+'/'+r.mip)+'</td>':'')+'<td>'+nt.join(' · ')+'</td></tr>'}).join(''):'<tr><td colspan="6" style="text-align:center;color:var(--mut)">응답이 없어요</td></tr>')+'</tbody></table><div class="d" style="margin:8px 0 0">총 '+rs.length+'건</div>'}
+  $('sht').innerHTML='<table class="sht"><thead><tr><th>제출</th><th>지점</th><th>성함</th><th>예정</th>'+(me?'<th>건/MIP</th>':'')+'<th>비고</th></tr></thead><tbody>'+(rs.length?rs.map(function(r){var nt=[];if(r.extra)nt.push('명단외');if(r.late)nt.push('공지후');if(r.extra&&(D.settings||{})['xstat|'+c+'|'+r.name]==='Y')nt.push('통계제외');return '<tr><td>'+kt(r.ts)+'</td><td>'+r.branch+'</td><td>'+esc(r.name)+'</td><td>'+(r.days.length?r.days.join(''):'없음')+'</td>'+(me?'<td>'+(r.contracts==null?'-':r.contracts+'/'+r.mip)+'</td>':'')+'<td>'+nt.join(' · ')+'</td></tr>'}).join(''):'<tr><td colspan="6" style="text-align:center;color:var(--mut)">응답이 없어요</td></tr>')+'</tbody></table><div class="d" style="margin:8px 0 0">총 '+rs.length+'건</div>'}
   $('shw').onchange=d;$('shq').oninput=d;d()}
 var VIEW='dash',VMAP={'#roster':'roster','#resp':'resp','#key':'key'};
 try{VIEW=VMAP[location.hash]||'dash'}catch(e){}
@@ -1072,20 +1075,27 @@ function navInit(){var N={nvd:['home','대시보드'],nvr:['users','팀 명단']
 function navShow(){['nvr','nvp','nvk'].forEach(function(k){$(k).style.display=ROLE==='edit'?'':'none'});if(ROLE!=='edit'&&VIEW!=='dash')VIEW='dash';navAct()}
 function navAct(){[].forEach.call(document.querySelectorAll('.side .nv'),function(b){b.classList.toggle('act',b.dataset.v===VIEW)})}
 function go(v,fromHash){VIEW=v;if(!fromHash){try{history.replaceState(null,'',v==='dash'?location.pathname+location.search:'#'+v)}catch(e){location.hash=v==='dash'?'':v}}navAct();render();window.scrollTo(0,0)}
-function yrOpts(el,have){var by={};el.forEach(function(e){var g=gstart(e),y=g?glab(g).y:+e.slice(0,4);(by[y]=by[y]||[]).push(e)});
-  return Object.keys(by).sort().reverse().map(function(y){return '<optgroup label="'+y+'년">'+by[y].map(function(e){return '<option value="'+e+'"'+(e===D.cycle?' selected':'')+'>'+esc(wlabel(e))+' · AP '+rng(e)+' · 마감 '+md(e)+(have[e]?' · 저장됨':'')+'</option>'}).join('')+'</optgroup>'}).join('')}
-function rosterPick(){var sel=$('smw'),q=$('rq');
-  q.oninput=function(){var d=q.value.replace(/\D/g,'');if(d.length<6)return;var y=+d.slice(0,4),m=+d.slice(4,6),hit=null;
-    [].forEach.call(sel.options,function(o){if(hit)return;var g=gstart(o.value);if(g){var l=glab(g);if(l.y===y&&l.m===m)hit=o.value}});
-    if(hit){sel.value=hit;sel.dispatchEvent(new Event('change'));q.style.borderColor=''}else{q.style.borderColor='#CF8E8E';toast(y+'년 '+m+'월은 선택할 수 없어요',true)}};
-  q.onkeydown=function(e){if(e.key==='Enter')q.oninput()}}
-function pgWeek(){var cs=cycles();return '<div class="pgw"><span>기준 주차</span><select class="fld" id="pgw">'+cs.map(function(c){return '<option value="'+c+'"'+(c===CY?' selected':'')+'>'+esc(wlabel(c))+' · AP '+rng(c)+' · 마감 '+md(c)+'</option>'}).join('')+'</select></div>'}
+var WPK={};
+function wpkHTML(id,list,sel,have){WPK[id]={list:list,sel:sel,have:have||{},pm:null};return '<div class="wpk" id="wpk_'+id+'"></div><input type="hidden" id="'+id+'" value="'+sel+'">'}
+function wpkDraw(id){var S=WPK[id],box=$('wpk_'+id);if(!S||!box)return;
+  var gs={};S.list.forEach(function(c){var g=gstart(c);if(g)gs[g]=1});var gl=Object.keys(gs).sort();
+  if(!S.pm||gl.indexOf(S.pm)<0)S.pm=gstart(S.sel)||gl[gl.length-1];
+  var ix=gl.indexOf(S.pm),g=glab(S.pm),cs=gweeks(S.pm).filter(function(c){return S.list.indexOf(c)>-1}).reverse(),all=gweeks(S.pm);
+  box.innerHTML='<div class="wpt"><input class="fld wq" placeholder="월 바로가기 (예: 202612)" inputmode="numeric" autocomplete="off" maxlength="7"><div class="mn"><button type="button" class="mp" aria-label="이전 달"'+(ix<=0?' disabled':'')+'>‹</button><b>'+g.y+'년 '+g.m+'월</b><button type="button" class="mx" aria-label="다음 달"'+(ix>=gl.length-1?' disabled':'')+'>›</button></div></div>'+
+    '<div class="wpl">'+cs.map(function(c){return '<button type="button" class="wi nop'+(c===S.sel?' on':'')+'" data-c="'+c+'"><b>'+(all.indexOf(c)+1)+'주차'+(c===D.cycle?'<em>진행 중</em>':'')+(isME(c)?'<em>'+nextMon(c)+'월 예상</em>':'')+(S.have[c]?'<em>저장됨</em>':'')+'</b><span class="r">AP '+esc(rs(c))+' · 공지 '+esc(ms(c))+'</span></button>'}).join('')+'</div>';
+  box.querySelector('.mp').onclick=function(){if(ix>0){S.pm=gl[ix-1];wpkDraw(id)}};
+  box.querySelector('.mx').onclick=function(){if(ix<gl.length-1){S.pm=gl[ix+1];wpkDraw(id)}};
+  var q=box.querySelector('.wq');q.oninput=function(){var d=q.value.replace(/\D/g,'');if(d.length<6)return;var y=+d.slice(0,4),m=+d.slice(4,6);
+    var hit=gl.filter(function(k){var l=glab(k);return l.y===y&&l.m===m})[0];if(hit){S.pm=hit;wpkDraw(id)}else{q.style.borderColor='#CF8E8E';toast(y+'년 '+m+'월은 선택할 수 없어요',true)}};
+  q.onkeydown=function(e){if(e.key==='Enter')q.oninput()};
+  [].forEach.call(box.querySelectorAll('.wi'),function(b){b.onclick=function(){S.sel=b.dataset.c;var el=$(id);el.value=S.sel;wpkDraw(id);if(el.onchange)el.onchange()}})}
+function pgWeek(){return '<div class="pgw"><span>기준 주차</span>'+wpkHTML('pgw',cycles(),CY)+'</div>'}
 function renderPage(v){
   var h='',m=PG[v];
   if(v==='roster'){
     var es={};D.snaps.forEach(function(s){es[s.eff]=1});es[D.cycle]=1;for(var kk=1;kk<=4;kk++)es[fri(D.cycle,7*kk)]=1;var el=Object.keys(es).sort().reverse(),have={};D.snaps.forEach(function(s){have[s.eff]=1});
     h+='<div class="sm-sec"><div class="d">이름을 직접 입력해 <b>추가·제외</b>하거나 목록에서 눌러 제외/복구해요. 선택한 <b>적용 주차부터</b> 반영되고 이전 주차는 그대로예요.</div>'+
-      '<div class="rsel"><select class="fld" id="smw">'+yrOpts(el,have)+'</select><input class="fld" id="rq" placeholder="월 검색 (202612)" inputmode="numeric" autocomplete="off" maxlength="7"></div>'+
+      ''+wpkHTML('smw',el,D.cycle,have)+''+
       '<div class="sadd"><div class="smmd" id="smmd"><button data-m="add">추가</button><button data-m="del">제외</button></div><div class="sbr" id="smb3"></div><div class="sar"><input class="fld" id="sma" placeholder="새 이름 입력 (여러 명은 띄어쓰기·쉼표로)" autocomplete="off" enterkeyhint="done"><button class="pl" id="smab">추가</button></div><div class="sgl" id="smsg"></div></div><div id="smc"></div>'+
       '<details class="smd"><summary>엑셀에서 한 번에 붙여넣기</summary><textarea class="fld" id="smt" spellcheck="false"></textarea><div class="d" style="margin:8px 0 0">한 줄에 <b>지점번호 이름</b> (1 TREASURE · 2 HEXAGON · 3 A-ONE). 빼려면 이름 뒤에 <b>제외</b>.</div></details>'+
       '<div class="smbar"><div class="smp" id="smp"></div><button class="pl pri full" id="smsv">명단 저장</button></div></div>'}
@@ -1094,10 +1104,10 @@ function renderPage(v){
     h+='<div class="sm-sec"><div class="d">링크가 공개돼 있어서 키를 걸어두는 걸 권장해요. <b>비워서 저장하면 키 없이 누구나 열 수 있어요.</b></div><div class="sm-row" style="margin-bottom:8px"><input class="fld" id="smkv" placeholder="새 접근 키 (4자 이상, 공백 없이)" autocomplete="off"></div><button class="pl full" id="smkb">접근 키 저장</button></div>';
     if(KEY&&KEY!=='-')h+='<div class="sm-sec"><button class="pl full" id="smo">이 기기에서 나가기</button><div class="d" style="margin:8px 0 0;text-align:center">이 기기에 저장된 키를 지워요</div></div>'}
   say('<div class="pg"><div class="pgh"><div class="eyb">'+m.e+'</div><h1>'+m.t+'</h1>'+(m.d?'<p>'+m.d+'</p>':'')+'</div><div class="pgc" id="smb">'+h+'</div></div>');
+  [].forEach.call(document.querySelectorAll('.wpk'),function(b){wpkDraw(b.id.slice(4))});
   if($('smo'))$('smo').onclick=function(){logout('')};
   if($('pgw'))$('pgw').onchange=function(){CY=$('pgw').value;render()};
   if(v==='roster'){
-    rosterPick();
     $('smt').value=smFill($('smw').value);smDraw();smUpdate();
     $('smw').onchange=function(){$('smt').value=smFill($('smw').value);smDraw();smUpdate()};$('smt').oninput=function(){smDraw();smUpdate()};$('smab').onclick=smAdd;$('sma').oninput=smSug;$('sma').addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();smAdd()}});
     $('smsv').onclick=function(){var pr=smParse($('smt').value);if(pr.errs.length||!pr.rows.length)return;$('smsv').disabled=true;
@@ -1136,7 +1146,7 @@ function openWeeks(){
   if(!PM||gl.indexOf(PM)<0)PM=gstart(CY)||gl[gl.length-1];
   function draw(){var ix=gl.indexOf(PM),g=glab(PM),cs=gweeks(PM).filter(function(c){return c<=D.cycle}).reverse();
     $('wl').innerHTML='<div class="mn"><button id="mnp" aria-label="이전 달"'+(ix<=0?' disabled':'')+'>‹</button><b>'+g.y+'년 '+g.m+'월</b><button id="mnn" aria-label="다음 달"'+(ix>=gl.length-1?' disabled':'')+'>›</button></div>'+
-      cs.map(function(c){var C=calc(c),k=gweeks(PM).indexOf(c)+1;return '<button class="wi nop'+(c===CY?' on':'')+'" data-c="'+c+'"><b>'+k+'주차'+(c===D.cycle?'<em>진행 중</em>':'')+(C.me?'<em>'+nextMon(c)+'월 예상</em>':'')+'</b><span class="r">AP '+esc(rs(c))+' · 마감 '+esc(ms(c))+'</span></button>'}).join('');
+      cs.map(function(c){var C=calc(c),k=gweeks(PM).indexOf(c)+1;return '<button class="wi nop'+(c===CY?' on':'')+'" data-c="'+c+'"><b>'+k+'주차'+(c===D.cycle?'<em>진행 중</em>':'')+(C.me?'<em>'+nextMon(c)+'월 예상</em>':'')+'</b><span class="r">AP '+esc(rs(c))+' · 공지 '+esc(ms(c))+'</span></button>'}).join('');
     $('mnp').onclick=function(){if(ix>0){PM=gl[ix-1];draw()}};$('mnn').onclick=function(){if(ix<gl.length-1){PM=gl[ix+1];draw()}};
     [].forEach.call($('wl').querySelectorAll('.wi'),function(b){b.onclick=function(){CY=b.dataset.c;$('wm').classList.remove('on');render();window.scrollTo(0,0)}})}
   var q=$('wq');q.value='';q.oninput=function(){var d=q.value.replace(/\D/g,''),y,m;if(d.length>=6){y=+d.slice(0,4);m=+d.slice(4,6)}else return;
@@ -1184,8 +1194,8 @@ function allView(C){
   if(C.me)h+=monthBlock(C,true);
   h+=notes(C);return h}
 function notes(x){var h='',ea=x.extAll||x.ext||[];if(ROLE==='edit'&&ea.length)h+='<div class="gl grp ex"><div class="gh"><b>명단 외 응답</b><em>'+ea.length+'</em></div><div class="names">'+ea.map(function(r){return '<button class="nmp ex adb" data-add="'+esc(r.name)+'|'+r.branch+'">+ '+esc(r.name)+(r.xs?' · 제외':'')+'</button>'}).join('')+'</div><div class="d2">누르면 이 주차부터 명단에 넣어요 · 통계 제외는 설정에서</div></div>';var ex=x.extra!=null?x.extra:x.ext.length;if(ex)h+='<div class="note"><b>●</b> 명단 외 응답 '+ex+'명을 명단·응답률에 포함했어요</div>';var xx=x.extraX!=null?x.extraX:(x.extX||[]).length;if(xx)h+='<div class="note" style="margin-top:8px"><b style="color:var(--mut)">●</b> 통계 제외 '+xx+'명 (설정에서 변경)</div>';
-  var lt=x.late;if(lt)h+='<div class="note" style="margin-top:8px"><b style="color:var(--acT)">●</b> 마감 후 응답 '+lt+'명 포함 (집계 반영)</div>';return h}
-function tags(r){return (r.extra?'<em class="ex">명단외</em>':'')+(r.late?'<em class="lt">마감후</em>':'')}
+  var lt=x.late;if(lt)h+='<div class="note" style="margin-top:8px"><b style="color:var(--acT)">●</b> 공지 후 응답 '+lt+'명 포함 (집계 반영)</div>';return h}
+function tags(r){return (r.extra?'<em class="ex">명단외</em>':'')+(r.late?'<em class="lt">공지후</em>':'')}
 function pill(r){return '<span class="nmp'+(r.extra?' ex':'')+(r.late?' lt':'')+'">'+esc(r.name)+'</span>'}
 function brView(b,C){
   var h='<div class="brh"><i class="td big" style="background:var(--bc)"></i><b>'+esc(b.team)+'</b><span>'+esc(b.mgr)+'</span></div>';
@@ -1202,7 +1212,7 @@ function brView(b,C){
     h+='<div class="grps dv">'+DAYS.map(function(d,i){var ns=b.all.filter(function(r){return r.days.indexOf(d)>-1}).sort(function(a,z){return ko(a.name,z.name)});
       return '<div class="gl grp'+(i>4?' g':'')+'"><div class="gh"><b>'+d+'요일<small>'+dm(add(CY,3+i))+'일</small></b><em>'+ns.length+'</em></div><div class="names">'+(ns.length?ns.map(pill).join(''):'<div class="none">없어요</div>')+'</div></div>'}).join('')+'</div>';
     var nl2=b.all.filter(function(r){return !r.days.length});h+='<div class="gl grp g nn"><div class="gh"><b>예정 없음</b><em>'+nl2.length+'</em></div><div class="names">'+(nl2.length?nl2.map(pill).join(''):'<div class="none">없어요</div>')+'</div></div>'}
-  h+='<div class="legend2"><span><i style="background:var(--ac)"></i>마감 후 응답</span><span><i style="background:var(--ex)"></i>명단 외</span></div>';
+  h+='<div class="legend2"><span><i style="background:var(--ac)"></i>공지 후 응답</span><span><i style="background:var(--ex)"></i>명단 외</span></div>';
   if(C.me){h+=monthBlock(b,false);
     var rs=b.mRows.slice().sort(function(a,z){return (z.mip||0)-(a.mip||0)||ko(a.name,z.name)});
     h+='<div class="gl mlist" style="margin-top:14px">'+(rs.length?rs.map(function(r){return (r.contracts||r.mip)?'<div class="rw2"><span class="nm0">'+esc(r.name)+tags(r)+'</span><span class="c"><b>'+r.contracts+'</b>건</span><span class="m"><b>'+won(r.mip)+'</b>만원</span></div>':'<div class="rw2"><span class="nm0">'+esc(r.name)+tags(r)+'</span><span class="z">예상 없음</span></div>'}).join(''):'<div class="none" style="padding:6px 0 18px">아직 입력이 없어요</div>')+'</div>'}
