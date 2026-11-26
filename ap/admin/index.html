@@ -1039,7 +1039,7 @@ function RTS(){var t=rtv();return '<div class="rts" id="rts"><button data-t="lig
 function repBind(){$('rpx').onclick=function(){$('rpm').classList.remove('on')};$('rpm').addEventListener('click',function(e){if(e.target===$('rpm'))$('rpm').classList.remove('on')})}
 
 
-var CK={none:1};var D=null,CY=null,TAB='all',VW='person',LOADED=false,KEY='',ROLE='';
+var CK={pend:1,plan:1,none:1,ml:1};var D=null,CY=null,TAB='all',VW='person',LOADED=false,KEY='',ROLE='';
 function say(h){$('root').innerHTML=h}
 function boot(){
   $('bref').innerHTML=ICO.ref+'<span class="t">새로고침</span>';navInit();$('sbt').innerHTML=ICO.pn;initSide();$('smx').innerHTML=ICO.x;$('smx').onclick=function(){$('sm').classList.remove('on')};$('blink').innerHTML=ICO.link+'<span class="t">설문 링크</span>';$('bcp').innerHTML=ICO.cp+'<span class="t">이미지 복사</span>';$('bsv').innerHTML=ICO.dl+'<span class="t">저장</span>';bindTheme();repBind();
@@ -1076,7 +1076,7 @@ function smUpdate(){var eff=$('smw').value,pr=smParse($('smt').value),rows=pr.ro
   pr.errs.slice(0,5).forEach(function(e){h+='<span class="er">'+esc(e)+'</span>'});
   if(!rows.length&&!pr.errs.length)h+='<span class="er">명단이 비어 있어요</span>';
   $('smp').innerHTML=h;$('smsv').disabled=!ok}
-var SMB=1,SMM='add',SMO={1:1,2:0,3:0};
+var SMB=1,SMM='add',SMO={1:0,2:0,3:0};
 function smCho(s){var C='ㄱㄲㄴㄷㄸㄹㅁㅂㅃㅅㅆㅇㅈㅉㅊㅋㅌㅍㅎ',o='';for(var i=0;i<s.length;i++){var c=s.charCodeAt(i)-44032;o+=(c>=0&&c<11172)?C[Math.floor(c/588)]:s[i]}return o}
 function smRows(){return smParse($('smt').value).rows}
 function smSet(rows){$('smt').value=rows.map(function(r){return r.b+' '+r.n+(r.y?'':' 제외')}).join('\n');smDraw();smUpdate()}
