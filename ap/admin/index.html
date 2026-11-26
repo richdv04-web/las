@@ -1227,11 +1227,10 @@ function monthBlock(x,all){
   h+='<div class="ft" style="padding-top:'+(all?'4':'18')+'px">예상 계약 없음 <b>'+x.mN+'명</b></div></div>';return h}
 function allView(C){
   var h=heroHtml(C);
-  h+=dayCard(C,true);
   h+='<div class="sec">지점별</div>'+branchCompare(C);
   if(C.me)h+=monthBlock(C,true);
   h+=notes(C);return h}
-function notes(x){var h='',ea=x.extAll||x.ext||[];if(ROLE==='edit'&&ea.length)h+='<div class="gl grp ex"><div class="gh"><b>명단 외 응답</b><em>'+ea.length+'</em></div><div class="names">'+ea.map(function(r){return '<button class="nmp ex adb" data-add="'+esc(r.name)+'|'+r.branch+'">+ '+esc(r.name)+(r.xs?' · 제외':'')+'</button>'}).join('')+'</div><div class="d2">누르면 이 주차부터 명단에 넣어요 · 통계 제외는 설정에서</div></div>';var ex=x.extra!=null?x.extra:x.ext.length;if(ex)h+='<div class="note"><b>●</b> 명단 외 응답 '+ex+'명을 명단·응답률에 포함했어요</div>';var xx=x.extraX!=null?x.extraX:(x.extX||[]).length;if(xx)h+='<div class="note" style="margin-top:8px"><b style="color:var(--mut)">●</b> 통계 제외 '+xx+'명 (설정에서 변경)</div>';
+function notes(x){var h='',ea=x.extAll||x.ext||[];if(ROLE==='edit'&&ea.length)h+='<div class="gl grp ex"><div class="gh"><b>명단 외 응답</b><em>'+ea.length+'</em></div><div class="names">'+ea.map(function(r){return '<span class="nmp ex">'+esc(r.name)+(r.xs?' · 제외':'')+'</span>'}).join('')+'</div><div class="d2">명단 추가·제외는 사이드바 ‘팀 명단’에서만 할 수 있어요</div></div>';var ex=x.extra!=null?x.extra:x.ext.length;if(ex)h+='<div class="note"><b>●</b> 명단 외 응답 '+ex+'명을 명단·응답률에 포함했어요</div>';var xx=x.extraX!=null?x.extraX:(x.extX||[]).length;if(xx)h+='<div class="note" style="margin-top:8px"><b style="color:var(--mut)">●</b> 통계 제외 '+xx+'명 (설정에서 변경)</div>';
   var lt=x.late;if(lt)h+='<div class="note" style="margin-top:8px"><b style="color:var(--acT)">●</b> 마감 후 응답 '+lt+'명 포함 (집계 반영)</div>';return h}
 function tags(r){return (r.extra?'<em class="ex">명단외</em>':'')+(r.late?'<em class="lt">마감후</em>':'')}
 function pill(r){return '<span class="nmp tg'+(r.extra?' ex':'')+'">'+esc(r.name)+tags(r)+'</span>'}
@@ -1240,8 +1239,8 @@ function brView(b,C){
   h+=heroHtml(b,'var(--bc)');
   h+=dayCard(b,false);
   var cp=b.pend.join(', ');
-  h+='<div class="sech"><span class="t">명단</span><span class="sp"></span><span class="mini" id="vw"><button data-vw="person" class="'+(VW==='person'?'on':'')+'">인원별</button><button data-vw="day" class="'+(VW==='day'?'on':'')+'">요일별</button></span></div>';
-  h+='<div class="gl grp a" style="margin-bottom:14px"><div class="gh"><b>미응답'+''+'</b><em>'+b.pend.length+'</em></div><div class="names">'+(b.pend.length?b.pend.map(function(n){return ROLE==='edit'?'<button class="nmp xb2" data-drop="'+esc(n)+'" title="누르면 응답 대상에서 제외">'+esc(n)+'</button>':'<span class="nmp">'+esc(n)+'</span>'}).join(''):'<div class="none">전원 응답했어요</div>')+'</div>'+(ROLE==='edit'&&b.pend.length?'<div class="d2">응답 대상이 아닌 사람은 이름을 눌러 제외해요 (이 주차부터)</div>':'')+'</div>';
+  h+='<div class="sech"><span class="t">응답 명단</span><span class="sp"></span><span class="mini" id="vw"><button data-vw="person" class="'+(VW==='person'?'on':'')+'">인원별</button><button data-vw="day" class="'+(VW==='day'?'on':'')+'">요일별</button></span></div>';
+  h+='<div class="gl grp a" style="margin-bottom:14px"><div class="gh"><b>미응답'+''+'</b><em>'+b.pend.length+'</em></div><div class="names">'+(b.pend.length?b.pend.map(function(n){return '<span class="nmp">'+esc(n)+'</span>'}).join(''):'<div class="none">전원 응답했어요</div>')+'</div>'+'</div>';
   if(VW==='person'){
     var pl=b.all.filter(function(r){return r.days.length}).sort(function(a,z){return ko(a.name,z.name)}),nl=b.all.filter(function(r){return !r.days.length}).sort(function(a,z){return ko(a.name,z.name)});
     h+='<div class="gl grp"><div class="gh"><b>AP 예정</b><em>'+pl.length+'</em></div><div class="prs">'+(pl.length?pl.map(function(r){return '<div class="pr"><span class="pn">'+esc(r.name)+tags(r)+'</span><span class="d7">'+DAYS.map(function(d,i){return '<i class="'+(r.days.indexOf(d)>-1?'on':'')+(i>4?' we':'')+'">'+d+'</i>'}).join('')+'</span></div>'}).join(''):'<div class="none">없어요</div>')+'</div></div>';
