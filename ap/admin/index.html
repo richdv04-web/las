@@ -991,14 +991,6 @@ function makeNoticeV(v){
           var ps=String(Math.round(rt_));tx(c,'%',W-P-52,ry+50,26,400,T.mut,'right');tx(c,ps,W-P-52-mw(c,'%',26,400)-4,ry+50,44,500,T.fg,'right',-1);
           tickBar(P+52,ry+68,IW-104,30,rt_/100,pal.b[i])});
         y+=h1+PL}
-      if(C.me&&(C.mC||C.mM)){{
-          tx(c,nextMon(CY)+'월 예상',PL,y,28,600,LBC(c,PL,nextMon(CY)+'월 예상',28,600),'left',1);y+=44;
-          var h2=476;card(P,y,IW,h2,ct,cb,[pal.gold,.84,.5,430]);
-          tx(c,'예상 계약',P+52,y+72,24,600,T.mut);numC(c,String(C.mC),P+48,y+158,80,T.fg,300,'건',T.mut);
-          tx(c,'예상 총 MIP',P+52+IW*.4,y+72,24,600,T.mut);numC(c,won(C.mM),P+48+IW*.4,y+158,80,T.fg,300,'만원',T.mut);
-          C.bs.forEach(function(b,i){var ry=y+204+i*84;c.fillStyle=line;c.fillRect(P+52,ry,IW-104,1.5);c.beginPath();c.arc(P+52+8,ry+46,8,0,7);c.fillStyle=pal.b[i];c.fill();tx(c,b.team,P+52+28,ry+56,30,700,T.fg);
-            var m1=won(b.mM)+'만원',m2=b.mC+'건';tx(c,m1,W-P-52,ry+56,32,600,T.fg,'right');tx(c,m2,W-P-52-mw(c,m1,32,600)-28,ry+56,26,500,T.mut,'right')});
-          y+=h2+PL}}
       return y}
     if(v===4){
       var bd4=T.dark?'rgba(255,255,255,.075)':'rgba(0,0,0,.075)',cf=T.dark?'rgba(255,255,255,.055)':'#FFFFFF';
