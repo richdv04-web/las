@@ -613,7 +613,8 @@ body{transition:padding-left .3s cubic-bezier(.32,.72,0,1)}
 .pgw{display:flex;align-items:center;gap:12px;padding:18px 0 4px}.pgw span{font-size:13px;color:var(--mut);white-space:nowrap}.pgw .fld{max-width:280px}
 .side .pl.act{background:var(--card2);border-color:var(--ln)}
 @media(max-width:719px){.pgc{padding:4px 16px 18px;border-radius:20px}}
-.rwk{margin:2px 0 10px}.rwlist{display:grid;gap:8px;margin-bottom:14px;max-height:340px;overflow:auto}
+.rsel{display:flex;gap:8px;margin-bottom:8px}.rsel #smw{flex:1;min-width:0}.rsel #rq{width:150px;flex:none}
+@media(max-width:480px){.rsel #rq{width:116px}}
 </style></head><body><aside class="side" id="side"><div class="sgh"><span class="wm">L.A.S<i></i></span></div><div class="sg">메뉴</div><button class="pl nv act" id="nvd" data-v="dash"></button><button class="pl nv" id="nvr" data-v="roster" style="display:none"></button><button class="pl nv" id="nvp" data-v="resp" style="display:none"></button><button class="pl nv" id="nvk" data-v="key" style="display:none"></button><div class="sg">공유</div><button class="pl" id="blink" aria-label="설문 링크"></button><button class="pl pri" id="bcp" aria-label="이미지 복사"></button><button class="pl" id="bsv" aria-label="저장"></button><div class="sg">도구</div><button class="pl" id="bref" aria-label="새로고침"></button></aside><div class="scrim" id="scrim"></div><header class="top"><div class="in"><button class="ib" id="sbt" aria-label="사이드바" style="display:none"></button><button class="ib" id="thm"></button><span class="sp"></span><span class="wm">L.A.S<i></i></span></div></header>
 <main class="wrap" id="root"><div class="sk"></div><div class="sk" style="width:60%"></div><div class="sk" style="height:160px;border-radius:20px"></div></main>
 <div class="mo" id="wm"><div class="sh"><div class="hd2"><h3 style="margin:0">주차 선택</h3><button class="xb" id="wx" aria-label="닫기"></button></div><div class="sub">금요일 기준 주차 · 신청일 다음 주 월~일 AP</div><input class="fld" id="wq" placeholder="월 바로가기 (예: 202612)" inputmode="numeric" autocomplete="off" maxlength="7" style="margin-bottom:10px"><div class="wl" id="wl"></div></div></div>
@@ -1068,27 +1069,20 @@ function navInit(){var N={nvd:['home','대시보드'],nvr:['users','팀 명단']
 function navShow(){['nvr','nvp','nvk'].forEach(function(k){$(k).style.display=ROLE==='edit'?'':'none'});if(ROLE!=='edit'&&VIEW!=='dash')VIEW='dash';navAct()}
 function navAct(){[].forEach.call(document.querySelectorAll('.side .nv'),function(b){b.classList.toggle('act',b.dataset.v===VIEW)})}
 function go(v,fromHash){VIEW=v;if(!fromHash){try{history.replaceState(null,'',v==='dash'?location.pathname+location.search:'#'+v)}catch(e){location.hash=v==='dash'?'':v}}navAct();render();window.scrollTo(0,0)}
-var RPM=null;
-function rosterPick(){
-  var sel=$('smw'),have={};D.snaps.forEach(function(x){have[x.eff]=1});
-  var fr=[].map.call(sel.options,function(o){return o.value}).sort(),gs={};fr.forEach(function(c){var g=gstart(c);if(g)gs[g]=1});var gl=Object.keys(gs).sort();
-  if(!RPM||gl.indexOf(RPM)<0)RPM=gstart(sel.value)||gl[0];
-  function draw(){var ix=gl.indexOf(RPM),g=glab(RPM),ws=gweeks(RPM).filter(function(c){return fr.indexOf(c)>-1});
-    $('rwl').innerHTML='<div class="mn"><button id="rmp" aria-label="이전 달"'+(ix<=0?' disabled':'')+'>‹</button><b>'+g.y+'년 '+g.m+'월</b><button id="rmn" aria-label="다음 달"'+(ix>=gl.length-1?' disabled':'')+'>›</button></div>';
-    $('rwlist').innerHTML=ws.map(function(c){var k=gweeks(RPM).indexOf(c)+1,on=c===sel.value;return '<button class="wi nop'+(on?' on':'')+'" data-c="'+c+'"><b>'+k+'주차'+(c===D.cycle?'<em>진행 중</em>':'')+(have[c]?'<em>저장됨</em>':'')+(isME_(c)?'<em>'+glab(gstart(c)||c).m+'월 예상</em>':'')+'</b><span class="r">'+c.slice(5).replace('-','/')+'(금)부터 적용</span></button>'}).join('');
-    $('rmp').onclick=function(){if(ix>0){RPM=gl[ix-1];draw()}};$('rmn').onclick=function(){if(ix<gl.length-1){RPM=gl[ix+1];draw()}};
-    [].forEach.call($('rwlist').querySelectorAll('.wi'),function(b){b.onclick=function(){sel.value=b.dataset.c;sel.dispatchEvent(new Event('change'));draw()}})}
-  var q=$('rq');q.oninput=function(){var d=q.value.replace(/\D/g,'');if(d.length<6)return;var y=+d.slice(0,4),m=+d.slice(4,6),hit=gl.filter(function(g){var l=glab(g);return l.y===y&&l.m===m})[0];
-    if(hit){RPM=hit;draw();q.style.borderColor=''}else{q.style.borderColor='#CF8E8E';toast(y+'년 '+m+'월은 선택할 수 없어요',true)}};
-  q.onkeydown=function(e){if(e.key==='Enter')q.oninput()};
-  draw()}
+function yrOpts(el,have){var by={};el.forEach(function(e){var g=gstart(e),y=g?glab(g).y:+e.slice(0,4);(by[y]=by[y]||[]).push(e)});
+  return Object.keys(by).sort().reverse().map(function(y){return '<optgroup label="'+y+'년">'+by[y].map(function(e){return '<option value="'+e+'"'+(e===D.cycle?' selected':'')+'>'+esc(wlabel(e))+' · '+e.slice(5).replace('-','/')+' 금'+(have[e]?' · 저장됨':'')+'</option>'}).join('')+'</optgroup>'}).join('')}
+function rosterPick(){var sel=$('smw'),q=$('rq');
+  q.oninput=function(){var d=q.value.replace(/\D/g,'');if(d.length<6)return;var y=+d.slice(0,4),m=+d.slice(4,6),hit=null;
+    [].forEach.call(sel.options,function(o){if(hit)return;var g=gstart(o.value);if(g){var l=glab(g);if(l.y===y&&l.m===m)hit=o.value}});
+    if(hit){sel.value=hit;sel.dispatchEvent(new Event('change'));q.style.borderColor=''}else{q.style.borderColor='#CF8E8E';toast(y+'년 '+m+'월은 선택할 수 없어요',true)}};
+  q.onkeydown=function(e){if(e.key==='Enter')q.oninput()}}
 function pgWeek(){var cs=cycles();return '<div class="pgw"><span>기준 주차</span><select class="fld" id="pgw">'+cs.map(function(c){return '<option value="'+c+'"'+(c===CY?' selected':'')+'>'+esc(wlabel(c))+' · '+c.slice(5).replace('-','/')+' 금</option>'}).join('')+'</select></div>'}
 function renderPage(v){
   var h='',m=PG[v];
   if(v==='roster'){
     var es={};D.snaps.forEach(function(s){es[s.eff]=1});es[D.cycle]=1;for(var kk=1;kk<=30;kk++)es[fri(D.cycle,7*kk)]=1;var el=Object.keys(es).sort().reverse(),have={};D.snaps.forEach(function(s){have[s.eff]=1});
     h+='<div class="sm-sec"><div class="d">이름을 직접 입력해 <b>추가·제외</b>하거나 목록에서 눌러 제외/복구해요. 선택한 <b>적용 주차부터</b> 반영되고 이전 주차는 그대로예요.</div>'+
-      '<div class="rwk"><div class="rwl" id="rwl"></div></div><input class="fld" id="rq" placeholder="월 바로가기 (예: 202612)" inputmode="numeric" autocomplete="off" maxlength="7" style="margin-bottom:12px"><div class="rwlist" id="rwlist"></div><select id="smw" style="display:none">'+el.map(function(e){return '<option value="'+e+'"'+(e===D.cycle?' selected':'')+'>'+e+'</option>'}).join('')+'</select>'+
+      '<div class="rsel"><select class="fld" id="smw">'+yrOpts(el,have)+'</select><input class="fld" id="rq" placeholder="월 검색 (202612)" inputmode="numeric" autocomplete="off" maxlength="7"></div>'+
       '<div class="sadd"><div class="smmd" id="smmd"><button data-m="add">추가</button><button data-m="del">제외</button></div><div class="sbr" id="smb3"></div><div class="sar"><input class="fld" id="sma" placeholder="새 이름 입력 (여러 명은 띄어쓰기·쉼표로)" autocomplete="off" enterkeyhint="done"><button class="pl" id="smab">추가</button></div><div class="sgl" id="smsg"></div></div><div id="smc"></div>'+
       '<details class="smd"><summary>엑셀에서 한 번에 붙여넣기</summary><textarea class="fld" id="smt" spellcheck="false"></textarea><div class="d" style="margin:8px 0 0">한 줄에 <b>지점번호 이름</b> (1 TREASURE · 2 HEXAGON · 3 A-ONE). 빼려면 이름 뒤에 <b>제외</b>.</div></details>'+
       '<div class="smbar"><div class="smp" id="smp"></div><button class="pl pri full" id="smsv">명단 저장</button></div></div>'}
