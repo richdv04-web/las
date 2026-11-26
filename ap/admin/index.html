@@ -400,6 +400,8 @@ html[data-theme=light] .d7 i.on{color:#fff}
 
 .wl{display:grid;gap:8px;margin-top:6px}
 .wi{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 12px;align-items:center;text-align:left;padding:14px 16px;border-radius:18px;background:var(--card2);width:100%}
+.wi.nop{grid-template-columns:minmax(0,1fr)}
+.mn{display:flex;align-items:center;justify-content:space-between;margin:2px 0 12px}.mn b{font-size:16px;font-weight:700;letter-spacing:-.02em}.mn button{width:38px;height:38px;border-radius:50%;background:var(--card2);font-size:20px;line-height:1;display:flex;align-items:center;justify-content:center}.mn button:disabled{opacity:.3}
 .wi.on{background:var(--pill);color:var(--onpill)}
 .wi b{font-size:15px;font-weight:700;letter-spacing:-.02em;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .wi span.r{font-size:12.5px;color:var(--mut);font-variant-numeric:tabular-nums}
@@ -600,7 +602,11 @@ function md2(s){var d=pd(s);return pad(d.getMonth()+1)+'.'+pad(d.getDate())+'('+
 function dm(s){var d=pd(s);return d.getDate()}
 function rng(c){return md(add(c,3))+' – '+md(add(c,9))}
 function rng2(c){return md2(add(c,3))+' – '+md2(add(c,9))}
-function wlabel(c){var d=pd(c);return (d.getMonth()+1)+'월 '+Math.ceil(d.getDate()/7)+'주차'}
+function isME_(x){var v=(window.D&&D.settings||{})['monthend|'+x];return v==='Y'?true:v==='N'?false:isLastFri(x)}
+function gstart(c){var x=c;for(var k=0;k<6;k++){if(isME_(x))return x;x=add(x,-7)}return null}
+function glab(st){var d=pd(add(st,7));return{y:d.getFullYear(),m:d.getMonth()+1}}
+function wlabel(c){var st=gstart(c);if(!st){var d=pd(c);return (d.getMonth()+1)+'월 '+Math.ceil(d.getDate()/7)+'주차'}var g=glab(st),k=Math.round((pd(c)-pd(st))/6048e5)+1;return g.m+'월 '+k+'주차'}
+function gweeks(st){var a=[st],x=add(st,7);for(var k=0;k<5&&!isME_(x);k++){a.push(x);x=add(x,7)}return a}
 function isLastFri(c){return pd(add(c,7)).getMonth()!==pd(c).getMonth()}
 function nextMon(c){return (pd(c).getMonth()+1)%12+1}
 function cycleOf(t){var d=new Date(t);d=new Date(d.getFullYear(),d.getMonth(),d.getDate());d.setDate(d.getDate()-((d.getDay()-5+7)%7));return fd(d)}
@@ -1057,9 +1063,16 @@ function render(){
   $('blink').onclick=function(){if(D)copy(location.href.replace(/admin\/?(index\.html)?([?#].*)?$/,'')).then(function(){toast('설문 링크를 복사했어요')});else toast('설문 링크는 배포 후 연결돼요')};
   $('bnt').onclick=function(){repCopy('notice')};$('bns').onclick=function(){repSave('notice')};
   $('bcp').onclick=function(){repCopy(TAB==='all'?'all':+TAB)};$('bsv').onclick=function(){repSave(TAB==='all'?'all':+TAB)}}
+var PM=null;
 function openWeeks(){
-  var cs=cycles();$('wl').innerHTML=cs.map(function(c){var C=calc(c);return '<button class="wi'+(c===CY?' on':'')+'" data-c="'+c+'"><b>'+esc(wlabel(c))+(c===D.cycle?'<em>진행 중</em>':'')+(C.me?'<em>월말</em>':'')+'</b><span class="r">'+esc(rng(c))+'</span><span class="p">'+(C.respP==null?'–':C.respP+'<small>%</small>')+'</span></button>'}).join('');
-  [].forEach.call($('wl').children,function(b){b.onclick=function(){CY=b.dataset.c;$('wm').classList.remove('on');render();window.scrollTo(0,0)}});$('wm').classList.add('on')}
+  var gs={};cycles().forEach(function(c){var g=gstart(c);if(g)gs[g]=1});var gl=Object.keys(gs).sort();
+  if(!PM||gl.indexOf(PM)<0)PM=gstart(CY)||gl[gl.length-1];
+  function draw(){var ix=gl.indexOf(PM),g=glab(PM),cs=gweeks(PM).filter(function(c){return c<=D.cycle}).reverse();
+    $('wl').innerHTML='<div class="mn"><button id="mnp" aria-label="이전 달"'+(ix<=0?' disabled':'')+'>‹</button><b>'+g.y+'년 '+g.m+'월</b><button id="mnn" aria-label="다음 달"'+(ix>=gl.length-1?' disabled':'')+'>›</button></div>'+
+      cs.map(function(c){var C=calc(c),k=gweeks(PM).indexOf(c)+1;return '<button class="wi nop'+(c===CY?' on':'')+'" data-c="'+c+'"><b>'+k+'주차'+(c===D.cycle?'<em>진행 중</em>':'')+(C.me?'<em>월말</em>':'')+'</b><span class="r">'+esc(rng(c))+'</span></button>'}).join('');
+    $('mnp').onclick=function(){if(ix>0){PM=gl[ix-1];draw()}};$('mnn').onclick=function(){if(ix<gl.length-1){PM=gl[ix+1];draw()}};
+    [].forEach.call($('wl').querySelectorAll('.wi'),function(b){b.onclick=function(){CY=b.dataset.c;$('wm').classList.remove('on');render();window.scrollTo(0,0)}})}
+  draw();$('wm').classList.add('on')}
 function ticks(a,b,d){var t=a+b+d,s='<div class="tkb">';for(var k=0;k<t;k++)s+='<i class="'+(k<a?'y':k<a+b?'n':'w')+'"></i>';return s+'</div>'}
 function arc(p,col,N,r0,r1,sw){N=N||60;r0=r0||72;r1=r1||98;sw=sw||1.7;var v=p==null?0:Math.max(0,Math.min(100,p)),f=Math.round(v/100*N),h='';
   for(var k=0;k<N;k++){var t=Math.PI*(1-(k+.5)/N),c=Math.cos(t),sn=Math.sin(t);h+='<line x1="'+(100+r0*c).toFixed(2)+'" y1="'+(100-r0*sn).toFixed(2)+'" x2="'+(100+r1*c).toFixed(2)+'" y2="'+(100-r1*sn).toFixed(2)+'" stroke="'+(k<f?col:'var(--gr)')+'" stroke-width="'+sw+'" stroke-linecap="round"/>'}
