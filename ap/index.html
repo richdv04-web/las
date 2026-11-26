@@ -295,6 +295,7 @@ body{padding-bottom:70px}
 .card.ld .ldr{display:block}
 @keyframes ldp{50%{opacity:.3}}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+.apr{margin:0 0 10px;font-size:14px;font-weight:600;color:var(--mut,#8a8a8a);letter-spacing:-.01em}
 </style>
 <link rel="preconnect" href="https://script.google.com">
 <link rel="dns-prefetch" href="https://script.googleusercontent.com">
@@ -308,6 +309,7 @@ body{padding-bottom:70px}
 
   <section class="info">
     <div class="info-b">
+      <p class="apr" id="apr"></p>
       <span class="badge" id="badge"><svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9.4" fill="none" stroke="currentColor" stroke-width="1.6"/><path class="ck" d="M7.9 12.3l2.9 2.9 5.4-6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path class="ex" d="M12 7.4v5.6M12 16.1v.2" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></svg><span id="badgeT">—</span><em id="dday"></em></span>
     </div>
   </section>
@@ -526,9 +528,9 @@ body{padding-bottom:70px}
   function paintWeek(){
     var c=info.cycle,d=pd(c),late=Date.now()>info.deadline;
     var th=new Date(d.getTime());th.setDate(th.getDate()+6);var nm=(d.getMonth()+1)%12+1;
-    $('wk').textContent=(th.getMonth()+1)+'월 '+Math.ceil(th.getDate()/7)+'주차'+(info.monthEnd?' · '+nm+'월 예상':'');
+    $('wk').textContent=(th.getMonth()+1)+'월 '+Math.ceil(th.getDate()/7)+'주차'+(info.monthEnd?' · '+nm+'월 예상':'');var ap=$('apr');if(ap)ap.textContent='AP '+md(add(c,3))+' ~ '+md(add(c,9))+' · 마감 '+md(c)+'(금)';
     var b=$('badge');b.classList.toggle('late',late);
-    $('badgeT').textContent='제출기한 '+md(c)+'(금) 17:00';
+    $('badgeT').textContent='제출기한 '+md(c)+'(금) 17:00';$('wk').title='AP '+md(add(c,3))+'~'+md(add(c,9));
     var t=new Date();t=new Date(t.getFullYear(),t.getMonth(),t.getDate());var dl=new Date(info.deadline);dl=new Date(dl.getFullYear(),dl.getMonth(),dl.getDate());var dd=Math.round((dl-t)/864e5);
     $('dday').textContent=late?'D+'+Math.max(0,-dd):(dd<=0?'오늘 마감':'D-'+dd);
     $('latenote').classList.toggle('on',late);$('again').style.display=late?'none':'';

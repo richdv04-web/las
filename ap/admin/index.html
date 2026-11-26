@@ -636,6 +636,7 @@ function md(s){var d=pd(s);return (d.getMonth()+1)+'/'+d.getDate()+'('+WKD[d.get
 function md2(s){var d=pd(s);return pad(d.getMonth()+1)+'.'+pad(d.getDate())+'('+WKD[d.getDay()]+')'}
 function dm(s){var d=pd(s);return d.getDate()}
 function rng(c){return md(add(c,3))+' – '+md(add(c,9))}
+function wsub(c){return 'AP '+rng2(c)+'  ·  마감 '+md2(c)}
 function rng2(c){return md2(add(c,3))+' – '+md2(add(c,9))}
 function isME_(x){var v=(window.D&&D.settings||{})['monthend|'+x];return v==='Y'?true:v==='N'?false:isLastFri(x)}
 function thu(c){return pd(add(c,6))}
@@ -737,7 +738,7 @@ function makeReport(k){
     var y=P+10;
     tx(c,'L.A.S',P,y+14,22,700,T.fg,'left',7);c.beginPath();c.arc(P+mw(c,'L.A.S',22,700,7)+16,y+7,5,0,7);c.fillStyle=T.ac;c.fill();
     tx(c,nowTxt(D.now)+' 기준',W-P,y+14,22,500,T.faint,'right');
-    y+=88;tx(c,'AP CHECK',P,y,22,700,T.mut,'left',5);y+=40;tx(c,rng2(CY).replace(/\./g,'.'),P,y,22,700,T.mut,'left',3);y+=88;
+    y+=88;tx(c,'AP CHECK',P,y,22,700,T.mut,'left',5);y+=40;tx(c,wsub(CY),P,y,22,700,T.mut,'left',2);y+=88;
     tx(c,wlabel(CY),P,y,76,600,T.fg,'left',-2);y+=60;
     if(B){y+=36;c.beginPath();c.arc(P+14,y-14,13,0,7);c.fillStyle=T.b[B.i];c.fill();tx(c,B.team,P+42,y,52,700,T.fg,'left',2);tx(c,B.mgr+'  ·  명단 '+B.base+'명',P+42+mw(c,B.team,52,700,2)+26,y,24,450,T.mut);y+=50}
     else{y+=30;tx(c,'사업단 전체',P+4,y,26,700,T.mut);y+=44}
@@ -823,7 +824,7 @@ function makeNotice(){
     var y=P+10;
     var ttl='L.A.S AP CHECK REVIEW';tx(c,ttl,P,y+50,60,700,T.fg,'left',1);
     c.beginPath();c.arc(P+mw(c,ttl,60,700,1)+22,y+50-24,7,0,7);c.fillStyle=T.ac;c.fill();
-    y+=50+66;var wl=wlabel(CY);tx(c,wl,P,y,32,700,T.fg);tx(c,'·  '+rng2(CY),P+mw(c,wl,32,700)+14,y,30,500,T.mut,'left',1);y+=64;
+    y+=50+66;var wl=wlabel(CY);tx(c,wl,P,y,32,700,T.fg);tx(c,'·  '+wsub(CY),P+mw(c,wl,32,700)+14,y,30,500,T.mut,'left',1);y+=64;
     var hh=520,K='#FFFFFF',K6='#C2C2C4';glass(c,T,P,y,IW,hh,48,LN,T.hbg);
     tx(c,'전체 응답률',P+44,y+76,32,700,K);tx(c,'RESPONSE RATE',P+44+mw(c,'전체 응답률',32,700)+16,y+76,20,600,'#A0A0A3','left',3);
     var pv=C.base?String(Math.round(C.resp/C.base*10000)/100):'–';
@@ -893,7 +894,7 @@ function makeNoticeV(v){
     function pf(t,x,y,sz,wt,col,ls){c.font=wt+' '+sz+'px Paperlogy,'+FF;c.fillStyle=col;c.textAlign='left';c.textBaseline='alphabetic';try{c.letterSpacing=ls+'px'}catch(e){}c.fillText(t,x,y);var w=c.measureText(t).width;try{c.letterSpacing='0px'}catch(e){}return w}
     var tcol=T.fg;if(TGRAD){c.font='800 68px Paperlogy,'+FF;try{c.letterSpacing='-1.5px'}catch(e){}var tw0=c.measureText('LAS AP Check Review').width;try{c.letterSpacing='0px'}catch(e){}tcol=GR(c,PL,tw0)}
     pf('LAS AP Check Review',PL,y+52,68,800,tcol,-1.5);
-    y+=50+70;var wl=wlabel(CY);var ww=pf(wl,PL,y,34,600,T.fg,-.5);pf('·  '+rng2(CY),PL+ww+16,y,32,400,T.mut,0);return y+96}
+    y+=50+70;var wl=wlabel(CY);var ww=pf(wl,PL,y,34,600,T.fg,-.5);pf('·  '+wsub(CY),PL+ww+16,y,32,400,T.mut,0);return y+96}
   function cnt(c,xr,y,a,b,sz){var t=' / '+b+'명',w=mw(c,t,sz,500);tx(c,t,xr,y,sz,500,T.mut,'right');tx(c,String(a),xr-w,y,sz,700,T.fg,'right')}
   function paint(c,H){
     if(H){c.fillStyle=MOOD&&!T.dark?'#F2F2F5':T.bg;c.fillRect(0,0,W,H)}
@@ -1055,7 +1056,7 @@ function xsBind(){Array.prototype.forEach.call(document.querySelectorAll('#smb .
   api('apiSetExclude',KEY,CY,n,!on).then(function(){D.settings['xstat|'+CY+'|'+n]=on?'N':'Y';t.classList.toggle('on',on);t.setAttribute('aria-checked',on);t.parentNode.querySelector('span').textContent=t.parentNode.querySelector('span').textContent.split(' · ')[0]+' · '+(on?'통계 포함':'통계 제외');toast(on?'통계에 포함했어요':'통계에서 제외했어요');render()},function(e){toast(errText(e),true)})}})}
 function kt(ts){var d=new Date(ts+9*3600000);return (d.getUTCMonth()+1)+'/'+d.getUTCDate()+' '+p2(d.getUTCHours())+':'+p2(d.getUTCMinutes())}
 function shSec(){var cs=cycles();
-  return '<div class="sm-sec"><h4>원본 응답</h4><div class="d">구글 시트에 쌓인 원본 응답이에요. 주차를 고르거나 이름으로 찾을 수 있어요.</div><div class="sar" style="margin-bottom:8px"><select class="fld" id="shw">'+cs.map(function(c){return '<option value="'+c+'"'+(c===CY?' selected':'')+'>'+esc(wlabel(c))+' · '+c.slice(5).replace('-','/')+' 금</option>'}).join('')+'</select></div><input class="fld" id="shq" placeholder="이름 검색" autocomplete="off" style="margin-bottom:8px"><div class="shw"><div id="sht"></div></div>'+(D.sheetUrl?'<a class="pl full" style="margin-top:10px;text-decoration:none" href="'+esc(D.sheetUrl)+'" target="_blank" rel="noopener">구글 시트에서 열기</a>':'')+'</div>'}
+  return '<div class="sm-sec"><h4>원본 응답</h4><div class="d">구글 시트에 쌓인 원본 응답이에요. 주차를 고르거나 이름으로 찾을 수 있어요.</div><div class="sar" style="margin-bottom:8px"><select class="fld" id="shw">'+cs.map(function(c){return '<option value="'+c+'"'+(c===CY?' selected':'')+'>'+esc(wlabel(c))+' · AP '+rng(c)+' · 마감 '+md(c)+'</option>'}).join('')+'</select></div><input class="fld" id="shq" placeholder="이름 검색" autocomplete="off" style="margin-bottom:8px"><div class="shw"><div id="sht"></div></div>'+(D.sheetUrl?'<a class="pl full" style="margin-top:10px;text-decoration:none" href="'+esc(D.sheetUrl)+'" target="_blank" rel="noopener">구글 시트에서 열기</a>':'')+'</div>'}
 function shBind(){function d(){var c=$('shw').value,q=$('shq').value.trim(),rs=D.responses.filter(function(r){return r.cycle===c&&(!q||r.name.indexOf(q)>-1)}).sort(function(a,z){return z.ts-a.ts}),me=isME(c);
   $('sht').innerHTML='<table class="sht"><thead><tr><th>제출</th><th>지점</th><th>성함</th><th>예정</th>'+(me?'<th>건/MIP</th>':'')+'<th>비고</th></tr></thead><tbody>'+(rs.length?rs.map(function(r){var nt=[];if(r.extra)nt.push('명단외');if(r.late)nt.push('마감후');if(r.extra&&(D.settings||{})['xstat|'+c+'|'+r.name]==='Y')nt.push('통계제외');return '<tr><td>'+kt(r.ts)+'</td><td>'+r.branch+'</td><td>'+esc(r.name)+'</td><td>'+(r.days.length?r.days.join(''):'없음')+'</td>'+(me?'<td>'+(r.contracts==null?'-':r.contracts+'/'+r.mip)+'</td>':'')+'<td>'+nt.join(' · ')+'</td></tr>'}).join(''):'<tr><td colspan="6" style="text-align:center;color:var(--mut)">응답이 없어요</td></tr>')+'</tbody></table><div class="d" style="margin:8px 0 0">총 '+rs.length+'건</div>'}
   $('shw').onchange=d;$('shq').oninput=d;d()}
@@ -1070,13 +1071,13 @@ function navShow(){['nvr','nvp','nvk'].forEach(function(k){$(k).style.display=RO
 function navAct(){[].forEach.call(document.querySelectorAll('.side .nv'),function(b){b.classList.toggle('act',b.dataset.v===VIEW)})}
 function go(v,fromHash){VIEW=v;if(!fromHash){try{history.replaceState(null,'',v==='dash'?location.pathname+location.search:'#'+v)}catch(e){location.hash=v==='dash'?'':v}}navAct();render();window.scrollTo(0,0)}
 function yrOpts(el,have){var by={};el.forEach(function(e){var g=gstart(e),y=g?glab(g).y:+e.slice(0,4);(by[y]=by[y]||[]).push(e)});
-  return Object.keys(by).sort().reverse().map(function(y){return '<optgroup label="'+y+'년">'+by[y].map(function(e){return '<option value="'+e+'"'+(e===D.cycle?' selected':'')+'>'+esc(wlabel(e))+' · '+e.slice(5).replace('-','/')+' 금'+(have[e]?' · 저장됨':'')+'</option>'}).join('')+'</optgroup>'}).join('')}
+  return Object.keys(by).sort().reverse().map(function(y){return '<optgroup label="'+y+'년">'+by[y].map(function(e){return '<option value="'+e+'"'+(e===D.cycle?' selected':'')+'>'+esc(wlabel(e))+' · AP '+rng(e)+' · 마감 '+md(e)+(have[e]?' · 저장됨':'')+'</option>'}).join('')+'</optgroup>'}).join('')}
 function rosterPick(){var sel=$('smw'),q=$('rq');
   q.oninput=function(){var d=q.value.replace(/\D/g,'');if(d.length<6)return;var y=+d.slice(0,4),m=+d.slice(4,6),hit=null;
     [].forEach.call(sel.options,function(o){if(hit)return;var g=gstart(o.value);if(g){var l=glab(g);if(l.y===y&&l.m===m)hit=o.value}});
     if(hit){sel.value=hit;sel.dispatchEvent(new Event('change'));q.style.borderColor=''}else{q.style.borderColor='#CF8E8E';toast(y+'년 '+m+'월은 선택할 수 없어요',true)}};
   q.onkeydown=function(e){if(e.key==='Enter')q.oninput()}}
-function pgWeek(){var cs=cycles();return '<div class="pgw"><span>기준 주차</span><select class="fld" id="pgw">'+cs.map(function(c){return '<option value="'+c+'"'+(c===CY?' selected':'')+'>'+esc(wlabel(c))+' · '+c.slice(5).replace('-','/')+' 금</option>'}).join('')+'</select></div>'}
+function pgWeek(){var cs=cycles();return '<div class="pgw"><span>기준 주차</span><select class="fld" id="pgw">'+cs.map(function(c){return '<option value="'+c+'"'+(c===CY?' selected':'')+'>'+esc(wlabel(c))+' · AP '+rng(c)+' · 마감 '+md(c)+'</option>'}).join('')+'</select></div>'}
 function renderPage(v){
   var h='',m=PG[v];
   if(v==='roster'){
@@ -1105,7 +1106,7 @@ function renderPage(v){
 function dot(i){return '<i class="td" style="background:var(--b'+(i%3+1)+')"></i>'}
 function renderDash(){
   var C=calc(CY),cs=cycles(),late=D.now>new Date(CY+'T17:00:00+09:00').getTime(),cur=CY===D.cycle;
-  var h='<div class="hdr"><div class="hnow" id="tmt"></div><h1 class="ttl">LAS AP Check</h1><div class="hwk"><div class="wkt"><b>'+esc(wlabel(CY))+'</b><span>·</span><span>'+esc(rng2(CY))+'</span></div><button class="pl wp" id="wpick">주차 선택'+ICO.chd+'</button></div><div class="hdl" id="hdl"></div></div>';
+  var h='<div class="hdr"><div class="hnow" id="tmt"></div><h1 class="ttl">LAS AP Check</h1><div class="hwk"><div class="wkt"><b>'+esc(wlabel(CY))+'</b><span>·</span><span>'+esc(wsub(CY))+'</span></div><button class="pl wp" id="wpick">주차 선택'+ICO.chd+'</button></div><div class="hdl" id="hdl"></div></div>';
   h+='<div class="seg" id="tabs"><button data-t="all" class="'+(TAB==='all'?'on':'')+'">전체</button>'+C.bs.map(function(b,i){return '<button data-t="'+i+'" class="'+(String(i)===TAB?'on':'')+'">'+dot(i)+esc(b.team)+'</button>'}).join('')+'</div>';
   h+='<div class="nt"><button class="nb" id="bnt">'+ICO.mg+'<div><b>공지용 이미지 복사</b><span>전체 응답률 + 지점별 응답률 · 최대 화질</span></div></button><button class="ib" id="bns" aria-label="공지용 이미지 저장">'+ICO.dl+'</button></div>';
   h+=TAB==='all'?allView(C):'<div class="brv" style="--bc:var(--b'+(+TAB%3+1)+')">'+brView(C.bs[+TAB],C)+'</div>';
@@ -1133,7 +1134,7 @@ function openWeeks(){
   if(!PM||gl.indexOf(PM)<0)PM=gstart(CY)||gl[gl.length-1];
   function draw(){var ix=gl.indexOf(PM),g=glab(PM),cs=gweeks(PM).filter(function(c){return c<=D.cycle}).reverse();
     $('wl').innerHTML='<div class="mn"><button id="mnp" aria-label="이전 달"'+(ix<=0?' disabled':'')+'>‹</button><b>'+g.y+'년 '+g.m+'월</b><button id="mnn" aria-label="다음 달"'+(ix>=gl.length-1?' disabled':'')+'>›</button></div>'+
-      cs.map(function(c){var C=calc(c),k=gweeks(PM).indexOf(c)+1;return '<button class="wi nop'+(c===CY?' on':'')+'" data-c="'+c+'"><b>'+k+'주차'+(c===D.cycle?'<em>진행 중</em>':'')+(C.me?'<em>'+nextMon(c)+'월 예상</em>':'')+'</b><span class="r">'+esc(rng(c))+'</span></button>'}).join('');
+      cs.map(function(c){var C=calc(c),k=gweeks(PM).indexOf(c)+1;return '<button class="wi nop'+(c===CY?' on':'')+'" data-c="'+c+'"><b>'+k+'주차'+(c===D.cycle?'<em>진행 중</em>':'')+(C.me?'<em>'+nextMon(c)+'월 예상</em>':'')+'</b><span class="r">AP '+esc(rng(c))+' · 마감 '+esc(md(c))+'</span></button>'}).join('');
     $('mnp').onclick=function(){if(ix>0){PM=gl[ix-1];draw()}};$('mnn').onclick=function(){if(ix<gl.length-1){PM=gl[ix+1];draw()}};
     [].forEach.call($('wl').querySelectorAll('.wi'),function(b){b.onclick=function(){CY=b.dataset.c;$('wm').classList.remove('on');render();window.scrollTo(0,0)}})}
   var q=$('wq');q.value='';q.oninput=function(){var d=q.value.replace(/\D/g,''),y,m;if(d.length>=6){y=+d.slice(0,4);m=+d.slice(4,6)}else return;
