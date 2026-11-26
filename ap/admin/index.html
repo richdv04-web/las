@@ -356,6 +356,7 @@ body:before,body:after{display:none!important}
 .nmp.tg em.ex,.dvl .dvc em.ex{color:var(--ex)}
 .nmp.tg em.lt,.dvl .dvc em.lt{color:var(--acT)}
 .dvl .dvc{gap:6px}
+.legend2 em{font-style:normal;font-size:10.5px;font-weight:700;margin-right:6px}.legend2 em.lt{color:var(--acT)}.legend2 em.ex{color:var(--ex)}
 .dvl{padding:6px 20px;margin-top:10px}
 .dvl .dvr{display:grid;grid-template-columns:48px minmax(0,1fr) 30px;column-gap:14px;align-items:start;padding:16px 0;border-bottom:1px solid var(--ln)}
 .dvl .dvr:last-child{border-bottom:0}
@@ -1249,7 +1250,7 @@ function brView(b,C){
     h+='<div class="gl dvl">'+DAYS.map(function(d,i){var ns=b.all.filter(function(r){return r.days.indexOf(d)>-1}).sort(function(a,z){return ko(a.name,z.name)});
       return '<div class="dr'+(i>4?' we':'')+(ns.length?'':' z')+'"><div class="dd"><b>'+d+'</b><small>'+dm(add(CY,3+i))+'일</small></div><div class="dn">'+(ns.length?ns.map(function(r){return '<span class="dvc">'+esc(r.name)+tags(r)+'</span>'}).join(''):'<span class="dz">없음</span>')+'</div><div class="dcn">'+ns.length+'</div></div>'}).join('')+'</div>';
     var nl2=b.all.filter(function(r){return !r.days.length});h+='<div class="gl grp g nn"><div class="gh"><b>예정 없음</b><em>'+nl2.length+'</em></div><div class="names">'+(nl2.length?nl2.map(pill).join(''):'<div class="none">없어요</div>')+'</div></div>'}
-  h+='<div class="legend2"><span><i style="background:var(--ac)"></i>마감 후 응답</span><span><i style="background:var(--ex)"></i>명단 외</span></div>';
+  h+='<div class="legend2"><span><em class="lt">마감후</em>마감 후 응답</span><span><em class="ex">명단외</em>명단 외 응답</span></div>';
   if(C.me){h+=monthBlock(b,false);
     var rs=b.mRows.slice().sort(function(a,z){return (z.mip||0)-(a.mip||0)||ko(a.name,z.name)});
     var xr=xlRows(b.mRows);
