@@ -971,7 +971,7 @@ function makeNoticeV(v){
       var chx=PL,chy=y0+290;[['응답 '+C.resp+'명',T.fg],['미응답 '+(C.base-C.resp)+'명',T.mut],['대상 '+C.base+'명',T.mut]].forEach(function(ch){var cw=mw(c,ch[0],24,600)+36;rr(c,chx,chy,cw,48,24);c.fillStyle=T.dark?'rgba(255,255,255,.06)':'rgba(0,0,0,.05)';c.fill();c.strokeStyle=T.dark?'rgba(255,255,255,.10)':'rgba(0,0,0,.08)';c.lineWidth=1.5;c.stroke();tx(c,ch[0],chx+18,chy+32,24,600,ch[1]);chx+=cw+12});
       var cx=W-PL-140,cy=y0+170;gaugeDraw(c,134,cx,cy,C.resp/C.base,pal.gold,T.dark,84);
       if(dAll!=null){tx(c,'지난주 대비',cx,cy-22,22,500,T.faint,'center');dpill(c,T,cx,cy+28,dAll,true,pal,pal.gold,true)}else{tx(c,String(C.resp),cx,cy+10,54,700,T.fg,'center')}
-      y=y0+290+48+104;tx(c,'지점별 응답률',PL,y,28,600,LBC(c,PL,'지점별 응답률',28,600),'left',1);y+=52;
+      y=y0+290+48+44;c.fillStyle=line;c.fillRect(PL,y,W-PL*2,1.5);y+=76;tx(c,'지점별 응답률',PL,y,28,600,LBC(c,PL,'지점별 응답률',28,600),'left',1);y+=52;
       var gp=NOBOX?24:(MOOD?16:22),X0=NOBOX?PL:P,IW2=NOBOX?W-PL*2:IW,dx=NOBOX?8:40,tw=(IW2-gp*2)/3,th=GAUGE==='semi'?424:480;
       BR.forEach(function(o,i){var x=X0+i*(tw+gp);card(x,y,tw,th,ct,cb,[o.col,.1,1.0,300]);
         c.beginPath();c.arc(x+dx,y+58,8,0,7);c.fillStyle=o.col;c.fill();tx(c,o.b.team,x+dx+20,y+68,27,700,T.fg,'left',.5);
@@ -982,7 +982,7 @@ function makeNoticeV(v){
       y+=th+PL;
       var MA=C.me?monthAvg(CY):null;
       if(MA&&MA.n){
-        y+=30;var m0=y;
+        c.fillStyle=line;c.fillRect(PL,y-12,W-PL*2,1.5);y+=54;var m0=y;
         tx(c,MA.label+'월 월평균 응답률',PL,m0+34,28,600,LBC(c,PL,MA.label+'월 월평균 응답률',28,600),'left',1);
         numC(c,String(Math.round(MA.respP)),PL-8,m0+242,196,T.fg,300,'%',T.mut);
         var mcx=W-PL-140,mcy=m0+170;gaugeDraw(c,134,mcx,mcy,MA.respP/100,pal.gold,T.dark,84);tx(c,MA.n+'주 평균',mcx,mcy+10,24,600,T.mut,'center');
