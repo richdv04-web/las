@@ -986,8 +986,8 @@ function makeNoticeV(v){
         var cw3=(IW-104)/3;[['응답률',fx(MA.respP,1),'%'],['주평균 AP 예정',fx(MA.wk,0),'건'],['인당 평균',fx(MA.pc,2),'건']].forEach(function(t,i){var x=P+52+i*cw3;tx(c,t[0],x,y+72,24,600,T.mut);numC(c,t[1],x-4,y+158,80,T.fg,300,t[2],T.mut)});
         MA.bs.forEach(function(b,i){var ry=y+204+i*84;c.fillStyle=line;c.fillRect(P+52,ry,IW-104,1.5);c.beginPath();c.arc(P+52+8,ry+46,8,0,7);c.fillStyle=pal.b[i];c.fill();tx(c,b.team,P+52+28,ry+56,30,700,T.fg);
           var r1=b.base?fx(b.resp/b.base*100,1)+'%':'–',r2=MA.n?'주 '+fx(b.plan/MA.n,0)+'건':'–';tx(c,r1,W-P-52,ry+56,32,600,T.fg,'right');tx(c,r2,W-P-52-mw(c,r1,32,600)-28,ry+56,26,500,T.mut,'right')});
-        y+=h1+PL;
-        if(C.mC||C.mM){
+        y+=h1+PL}
+      if(C.me&&(C.mC||C.mM)){{
           tx(c,nextMon(CY)+'월 예상',PL,y,28,600,LBC(c,PL,nextMon(CY)+'월 예상',28,600),'left',1);y+=44;
           var h2=476;card(P,y,IW,h2,ct,cb,[pal.gold,.84,.5,430]);
           tx(c,'예상 계약',P+52,y+72,24,600,T.mut);numC(c,String(C.mC),P+48,y+158,80,T.fg,300,'건',T.mut);
