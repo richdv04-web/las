@@ -913,7 +913,7 @@ function semi(c,cx,cy,R,lw,ratio,col,trk){c.lineCap='round';c.lineWidth=lw;c.str
 function tickSemi(c,cx,cy,R,N,ratio,col,dark){var lenF=R*.25,lenU=R*.11,w=Math.max(3.4,R*.034),fl=Math.round(Math.min(ratio,1)*N);for(var k=0;k<N;k++){var a=Math.PI+(k+.5)/N*Math.PI,len=k<fl?lenF:lenU;c.save();c.translate(cx,cy);c.rotate(a);rr(c,R-lenF,-w/2,len,w,w/2);if(k<fl){var t=fl>1?k/(fl-1):1;c.fillStyle=hexA(col,.32+.68*t)}else c.fillStyle=dark?'rgba(255,255,255,.2)':'rgba(0,0,0,.09)';c.fill();c.restore()}}
 function semiT(c,cx,cy,Ri,Ro,N,ratio,col,trk){var fl=Math.round(Math.min(ratio,1)*N),w=Math.PI*(Ri+Ro)/2/N*.7,len=Ro-Ri;for(var k=0;k<N;k++){var a=Math.PI+(k+.5)/N*Math.PI;c.save();c.translate(cx,cy);c.rotate(a);rr(c,Ri,-w/2,len,w,w/2);c.fillStyle=k<fl?hexA(col,.45+.55*(fl>1?k/(fl-1):1)):trk;c.fill();c.restore()}}
 var GAUGE='tick',MOOD=true,NOBOX=false,TGRAD=0;
-function tickRing(c,cx,cy,R,N,ratio,col,dark){var lenF=R*.25,lenU=R*.11,w=Math.max(3.4,R*.034),fl=Math.round(Math.min(ratio,1)*N);for(var k=0;k<N;k++){var a=-Math.PI/2+(k+.5)/N*Math.PI*2,len=k<fl?lenF:lenU;c.save();c.translate(cx,cy);c.rotate(a);rr(c,R-lenF,-w/2,len,w,w/2);if(k<fl){var t=fl>1?k/(fl-1):1;c.fillStyle=hexA(col,.32+.68*t)}else c.fillStyle=dark?'rgba(255,255,255,.2)':(MOOD?'rgba(0,0,0,.09)':'rgba(0,0,0,.17)');c.fill();c.restore()}}
+function tickRing(c,cx,cy,R,N,ratio,col,dark){var lenF=R*.25,lenU=R*.11,w=2*Math.PI*(R-lenF/2)/N*.6,fl=Math.round(Math.min(ratio,1)*N);for(var k=0;k<N;k++){var a=-Math.PI/2+(k+.5)/N*Math.PI*2,len=k<fl?lenF:lenU;c.save();c.translate(cx,cy);c.rotate(a);rr(c,R-lenF,-w/2,len,w,w/2);if(k<fl){var t=fl>1?k/(fl-1):1;c.fillStyle=hexA(col,.32+.68*t)}else c.fillStyle=dark?'rgba(255,255,255,.2)':(MOOD?'rgba(0,0,0,.09)':'rgba(0,0,0,.17)');c.fill();c.restore()}}
 function waveC(c,cx,cy,R,ratio,col,dark){var r=Math.min(ratio,1);
   c.beginPath();c.arc(cx,cy,R+R*.13,0,Math.PI*2);c.lineWidth=2;c.strokeStyle=hexA(col,.22);c.stroke();
   c.save();c.beginPath();c.arc(cx,cy,R,0,Math.PI*2);c.clip();
@@ -969,13 +969,13 @@ function makeNoticeV(v){
       tx(c,'전체 응답률',PL,y0+34,28,600,LBC(c,PL,'전체 응답률',28,600),'left',1);
       numC(c,String(rAll),PL-8,y0+242,196,T.fg,300,'%',T.mut);
       var chx=PL,chy=y0+290;[['응답 '+C.resp+'명',T.fg],['미응답 '+(C.base-C.resp)+'명',T.mut],['대상 '+C.base+'명',T.mut]].forEach(function(ch){var cw=mw(c,ch[0],24,600)+36;rr(c,chx,chy,cw,48,24);c.fillStyle=T.dark?'rgba(255,255,255,.06)':'rgba(0,0,0,.05)';c.fill();c.strokeStyle=T.dark?'rgba(255,255,255,.10)':'rgba(0,0,0,.08)';c.lineWidth=1.5;c.stroke();tx(c,ch[0],chx+18,chy+32,24,600,ch[1]);chx+=cw+12});
-      var cx=W-PL-140,cy=y0+170;gaugeDraw(c,134,cx,cy,C.resp/C.base,pal.gold,T.dark,84);
+      var cx=W-PL-140,cy=y0+170;gaugeDraw(c,134,cx,cy,C.resp/C.base,pal.gold,T.dark,56);
       if(dAll!=null){tx(c,'지난주 대비',cx,cy-22,22,500,T.faint,'center');dpill(c,T,cx,cy+28,dAll,true,pal,pal.gold,true)}else{tx(c,String(C.resp),cx,cy+10,54,700,T.fg,'center')}
-      y=y0+290+48+44;c.fillStyle=line;c.fillRect(PL,y,W-PL*2,1.5);y+=76;tx(c,'지점별 응답률',PL,y,28,600,LBC(c,PL,'지점별 응답률',28,600),'left',1);y+=52;
+      y=y0+290+48+100;tx(c,'지점별 응답률',PL,y,28,600,LBC(c,PL,'지점별 응답률',28,600),'left',1);y+=52;
       var gp=NOBOX?24:(MOOD?16:22),X0=NOBOX?PL:P,IW2=NOBOX?W-PL*2:IW,dx=NOBOX?8:40,tw=(IW2-gp*2)/3,th=GAUGE==='semi'?424:480;
       BR.forEach(function(o,i){var x=X0+i*(tw+gp);card(x,y,tw,th,ct,cb,[o.col,.1,1.0,300]);
         c.beginPath();c.arc(x+dx,y+58,8,0,7);c.fillStyle=o.col;c.fill();tx(c,o.b.team,x+dx+20,y+68,27,700,T.fg,'left',.5);
-        var sm=GAUGE==='semi',rcx=x+tw/2,rcy=sm?y+252:y+238;if(sm)semiT(c,rcx,rcy,98,126,24,o.r/100,o.col,trk2);else gaugeDraw(c,104,rcx,rcy,o.r/100,o.col,T.dark,60);
+        var sm=GAUGE==='semi',rcx=x+tw/2,rcy=sm?y+252:y+238;if(sm)semiT(c,rcx,rcy,98,126,24,o.r/100,o.col,trk2);else gaugeDraw(c,104,rcx,rcy,o.r/100,o.col,T.dark,44);
         var ns=String(o.r),fs=ns.length>2?58:72,nw=mw(c,ns,fs,400,-2),pw=mw(c,'%',26,400);var ny=sm?rcy-6:rcy+fs*.34;tx(c,ns,rcx-(nw+pw+3)/2,ny,fs,400,T.fg,'left',-2);tx(c,'%',rcx-(nw+pw+3)/2+nw+3,ny,26,400,T.mut);
         var ct2=' / '+o.b.base+'명',w1=mw(c,String(o.b.resp),28,700),w2=mw(c,ct2,28,500),sx=rcx-(w1+w2)/2;var cy2=sm?y+316:y+394;tx(c,String(o.b.resp),sx,cy2,28,700,T.fg);tx(c,ct2,sx+w1,cy2,28,500,T.mut);
         if(o.d!=null)dpill(c,T,rcx,sm?y+362:y+440,o.d,false,pal,o.col,true)});
@@ -985,12 +985,12 @@ function makeNoticeV(v){
         c.fillStyle=line;c.fillRect(PL,y-12,W-PL*2,1.5);y+=54;var m0=y;
         tx(c,MA.label+'월 월평균 응답률',PL,m0+34,28,600,LBC(c,PL,MA.label+'월 월평균 응답률',28,600),'left',1);
         numC(c,String(Math.round(MA.respP)),PL-8,m0+242,196,T.fg,300,'%',T.mut);
-        var mcx=W-PL-140,mcy=m0+170;gaugeDraw(c,134,mcx,mcy,MA.respP/100,pal.gold,T.dark,84);tx(c,MA.n+'주 평균',mcx,mcy+10,24,600,T.mut,'center');
+        var mcx=W-PL-140,mcy=m0+170;gaugeDraw(c,134,mcx,mcy,MA.respP/100,pal.gold,T.dark,56);tx(c,MA.n+'주 평균',mcx,mcy+10,24,600,T.mut,'center');
         var gk=glab(gstart(add(CY,-7))),pm=gk.m-1,py=gk.y;if(pm<1){pm=12;py--}
         var pws=gweeks(py+'-'+pad(pm)).filter(function(z){return D.responses.some(function(r){return r.cycle===z})}),PR=null;
         if(pws.length){PR=[0,1,2].map(function(){return{r:0,b:0}});pws.forEach(function(z){calc(z).bs.forEach(function(b,i){PR[i].r+=b.resp;PR[i].b+=b.base})})}
         var RH=124;y=m0+242+96;var h1=40+3*RH;card(P,y,IW,h1,ct,cb,[pal.gold,.84,.5,430]);
-        function tickBar(x,yy,w,hh,ratio,col){var n=96,g=3.5,tw=(w-g*(n-1))/n,k=Math.round(Math.min(ratio,1)*n);for(var q=0;q<n;q++){rr(c,x+q*(tw+g),yy,tw,hh,tw/2);if(q<k){var t=k>1?q/(k-1):1;c.fillStyle=hexA(col,.32+.68*t)}else c.fillStyle=T.dark?'rgba(255,255,255,.2)':'rgba(0,0,0,.09)';c.fill()}}
+        function tickBar(x,yy,w,hh,ratio,col){var n=64,g=4,tw=(w-g*(n-1))/n,k=Math.round(Math.min(ratio,1)*n);for(var q=0;q<n;q++){rr(c,x+q*(tw+g),yy,tw,hh,tw/2);if(q<k){var t=k>1?q/(k-1):1;c.fillStyle=hexA(col,.32+.68*t)}else c.fillStyle=T.dark?'rgba(255,255,255,.2)':'rgba(0,0,0,.09)';c.fill()}}
         MA.bs.forEach(function(b,i){var ry=y+22+i*RH,rt_=b.base?b.resp/b.base*100:0;if(i){c.fillStyle=line;c.fillRect(P+52,ry-8,IW-104,1.5)}c.beginPath();c.arc(P+52+8,ry+38,8,0,7);c.fillStyle=pal.b[i];c.fill();tx(c,b.team,P+52+28,ry+48,30,700,T.fg);
           var ps=String(Math.round(rt_)),pxr=W-P-52-mw(c,'%',26,400)-4;tx(c,'%',W-P-52,ry+48,26,400,T.mut,'right');tx(c,ps,pxr,ry+48,44,500,T.fg,'right',-1);
           if(PR&&PR[i].b){var dd=Math.round(rt_)-Math.round(PR[i].r/PR[i].b*100);dpill(c,T,pxr-mw(c,ps,44,500,-1)-22,ry+34,dd,false,pal,pal.b[i])}
