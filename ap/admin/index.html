@@ -911,7 +911,7 @@ function bar(c,x,y,w,h,ratio,col,trk){rr(c,x,y,w,h,h/2);c.fillStyle=trk;c.fill()
 function ring(c,cx,cy,R,lw,ratio,col,trk){c.lineCap='round';c.lineWidth=lw;c.strokeStyle=trk;c.beginPath();c.arc(cx,cy,R,0,Math.PI*2);c.stroke();if(ratio>0){var rr_=Math.min(ratio,.9999),st=col;if(c.createConicGradient&&ratio<.99){var cg=c.createConicGradient(-Math.PI/2,cx,cy);cg.addColorStop(0,hexA(col,.8));cg.addColorStop(rr_,col);cg.addColorStop(1,col);st=cg}c.strokeStyle=st;c.beginPath();c.arc(cx,cy,R,-Math.PI/2,-Math.PI/2+Math.PI*2*Math.min(ratio,.9999));c.stroke()}c.lineCap='butt'}
 function semi(c,cx,cy,R,lw,ratio,col,trk){c.lineCap='round';c.lineWidth=lw;c.strokeStyle=trk;c.beginPath();c.arc(cx,cy,R,Math.PI,Math.PI*2);c.stroke();if(ratio>0){var g=c.createLinearGradient(cx-R,0,cx+R,0);g.addColorStop(0,hexA(col,.8));g.addColorStop(Math.min(ratio,1),col);g.addColorStop(1,col);c.strokeStyle=g;c.beginPath();c.arc(cx,cy,R,Math.PI,Math.PI+Math.PI*Math.min(ratio,1));c.stroke()}c.lineCap='butt'}
 function semiT(c,cx,cy,Ri,Ro,N,ratio,col,trk){var fl=Math.round(Math.min(ratio,1)*N),w=Math.PI*(Ri+Ro)/2/N*.7,len=Ro-Ri;for(var k=0;k<N;k++){var a=Math.PI+(k+.5)/N*Math.PI;c.save();c.translate(cx,cy);c.rotate(a);rr(c,Ri,-w/2,len,w,w/2);c.fillStyle=k<fl?hexA(col,.45+.55*(fl>1?k/(fl-1):1)):trk;c.fill();c.restore()}}
-var GAUGE='semi',MOOD=false,NOBOX=false,TGRAD=0;
+var GAUGE='tick',MOOD=true,NOBOX=false,TGRAD=0;
 function tickRing(c,cx,cy,R,N,ratio,col,dark){var lenF=R*.25,lenU=R*.11,w=Math.max(3.4,R*.034),fl=Math.round(Math.min(ratio,1)*N);for(var k=0;k<N;k++){var a=-Math.PI/2+(k+.5)/N*Math.PI*2,len=k<fl?lenF:lenU;c.save();c.translate(cx,cy);c.rotate(a);rr(c,R-lenF,-w/2,len,w,w/2);if(k<fl){var t=fl>1?k/(fl-1):1;c.fillStyle=hexA(col,.32+.68*t)}else c.fillStyle=dark?'rgba(255,255,255,.2)':(MOOD?'rgba(0,0,0,.09)':'rgba(0,0,0,.17)');c.fill();c.restore()}}
 function waveC(c,cx,cy,R,ratio,col,dark){var r=Math.min(ratio,1);
   c.beginPath();c.arc(cx,cy,R+R*.13,0,Math.PI*2);c.lineWidth=2;c.strokeStyle=hexA(col,.22);c.stroke();
@@ -978,7 +978,24 @@ function makeNoticeV(v){
         var ns=String(o.r),fs=ns.length>2?58:72,nw=mw(c,ns,fs,400,-2),pw=mw(c,'%',26,400);var ny=sm?rcy-6:rcy+fs*.34;tx(c,ns,rcx-(nw+pw+3)/2,ny,fs,400,T.fg,'left',-2);tx(c,'%',rcx-(nw+pw+3)/2+nw+3,ny,26,400,T.mut);
         var ct2=' / '+o.b.base+'명',w1=mw(c,String(o.b.resp),28,700),w2=mw(c,ct2,28,500),sx=rcx-(w1+w2)/2;var cy2=sm?y+316:y+394;tx(c,String(o.b.resp),sx,cy2,28,700,T.fg);tx(c,ct2,sx+w1,cy2,28,500,T.mut);
         if(o.d!=null)dpill(c,T,rcx,sm?y+362:y+440,o.d,false,pal,o.col,true)});
-      y+=th+PL;return y}
+      y+=th+PL;
+      var MA=C.me?monthAvg(CY):null;
+      if(MA&&MA.n){
+        tx(c,MA.label+'월 월평균',PL,y,28,600,LBC(c,PL,MA.label+'월 월평균',28,600),'left',1);tx(c,MA.n+'주 기준',W-PL,y,24,500,T.faint,'right');y+=44;
+        var h1=476;card(P,y,IW,h1,ct,cb,[pal.gold,.84,.5,430]);
+        var cw3=(IW-104)/3;[['응답률',fx(MA.respP,1),'%'],['주평균 AP 예정',fx(MA.wk,0),'건'],['인당 평균',fx(MA.pc,2),'건']].forEach(function(t,i){var x=P+52+i*cw3;tx(c,t[0],x,y+72,24,600,T.mut);numC(c,t[1],x-4,y+158,80,T.fg,300,t[2],T.mut)});
+        MA.bs.forEach(function(b,i){var ry=y+204+i*84;c.fillStyle=line;c.fillRect(P+52,ry,IW-104,1.5);c.beginPath();c.arc(P+52+8,ry+46,8,0,7);c.fillStyle=pal.b[i];c.fill();tx(c,b.team,P+52+28,ry+56,30,700,T.fg);
+          var r1=b.base?fx(b.resp/b.base*100,1)+'%':'–',r2=MA.n?'주 '+fx(b.plan/MA.n,0)+'건':'–';tx(c,r1,W-P-52,ry+56,32,600,T.fg,'right');tx(c,r2,W-P-52-mw(c,r1,32,600)-28,ry+56,26,500,T.mut,'right')});
+        y+=h1+PL;
+        if(C.mC||C.mM){
+          tx(c,nextMon(CY)+'월 예상',PL,y,28,600,LBC(c,PL,nextMon(CY)+'월 예상',28,600),'left',1);y+=44;
+          var h2=476;card(P,y,IW,h2,ct,cb,[pal.gold,.84,.5,430]);
+          tx(c,'예상 계약',P+52,y+72,24,600,T.mut);numC(c,String(C.mC),P+48,y+158,80,T.fg,300,'건',T.mut);
+          tx(c,'예상 총 MIP',P+52+IW*.4,y+72,24,600,T.mut);numC(c,won(C.mM),P+48+IW*.4,y+158,80,T.fg,300,'만원',T.mut);
+          C.bs.forEach(function(b,i){var ry=y+204+i*84;c.fillStyle=line;c.fillRect(P+52,ry,IW-104,1.5);c.beginPath();c.arc(P+52+8,ry+46,8,0,7);c.fillStyle=pal.b[i];c.fill();tx(c,b.team,P+52+28,ry+56,30,700,T.fg);
+            var m1=won(b.mM)+'만원',m2=b.mC+'건';tx(c,m1,W-P-52,ry+56,32,600,T.fg,'right');tx(c,m2,W-P-52-mw(c,m1,32,600)-28,ry+56,26,500,T.mut,'right')});
+          y+=h2+PL}}
+      return y}
     if(v===4){
       var bd4=T.dark?'rgba(255,255,255,.075)':'rgba(0,0,0,.075)',cf=T.dark?'rgba(255,255,255,.055)':'#FFFFFF';
       function card4(x,y0,w,h){if(NOBOX)return;if(!T.dark){c.save();c.shadowColor='rgba(30,30,60,.09)';c.shadowBlur=40*S;c.shadowOffsetY=14*S;rr(c,x,y0,w,h,40);c.fillStyle='#FFFFFF';c.fill();c.restore()}rr(c,x,y0,w,h,40);c.fillStyle=cf;c.fill();rr(c,x+.75,y0+.75,w-1.5,h-1.5,39);c.strokeStyle=bd4;c.lineWidth=1.5;c.stroke()}
@@ -1158,7 +1175,7 @@ function renderDash(){
   var C=calc(CY),cs=cycles(),late=D.now>new Date(CY+'T17:00:00+09:00').getTime(),cur=CY===D.cycle;
   var h='<div class="hdr"><div class="hnow" id="tmt"></div><h1 class="ttl">LAS AP Check</h1><div class="hwk"><div class="wkt"><b>'+esc(wlabel(CY))+'</b><span>·</span><span>'+esc(wsub(CY))+'</span></div><button class="pl wp" id="wpick">주차 선택'+ICO.chd+'</button></div><div class="hdl" id="hdl"></div></div>';
   h+='<div class="seg" id="tabs"><button data-t="all" class="'+(TAB==='all'?'on':'')+'">전체</button>'+C.bs.map(function(b,i){return '<button data-t="'+i+'" class="'+(String(i)===TAB?'on':'')+'">'+dot(i)+esc(b.team)+'</button>'}).join('')+'</div>';
-  h+='<div class="nt"><button class="nb" id="bnt">'+ICO.mg+'<div><b>공지용 이미지 복사</b><span>전체 응답률 + 지점별 응답률 · 최대 화질</span></div></button><button class="ib" id="bns" aria-label="공지용 이미지 저장">'+ICO.dl+'</button></div>';
+  h+=TAB==='all'?'<div class="nt"><button class="nb" id="bnt">'+ICO.mg+'<div><b>공지용 이미지 복사</b><span>전체 응답률'+(C.me?' + 월별 통계':'')+' · 지점별 응답률 · 최대 화질</span></div></button><button class="ib" id="bns" aria-label="공지용 이미지 저장">'+ICO.dl+'</button></div>':'<div class="nt"><button class="nb" id="bnt">'+ICO.mg+'<div><b>'+esc(C.bs[+TAB].team)+' 이미지 복사</b><span>이 지점 현황만 · 최대 화질</span></div></button><button class="ib" id="bns" aria-label="지점 이미지 저장">'+ICO.dl+'</button></div>';
   h+=TAB==='all'?allView(C):'<div class="brv" style="--bc:var(--b'+(+TAB%3+1)+')">'+brView(C.bs[+TAB],C)+'</div>';
   say(h);
   $('tmt').textContent=nowTxt(D.now)+' 기준';$('hdl').innerHTML=(cur?'<span class="mark ac">진행 중</span>':'')+(C.me?'<span class="mark">'+nextMon(CY)+'월 예상</span>':'');
@@ -1168,7 +1185,7 @@ function renderDash(){
   [].forEach.call(document.querySelectorAll('[data-vw]'),function(b){b.onclick=function(){VW=b.dataset.vw;render()}});
   [].forEach.call(document.querySelectorAll('[data-xl]'),function(b){b.onclick=function(){copy(decodeURIComponent(b.dataset.xl)).then(function(){toast('이름·금액을 복사했어요 · 엑셀 칸에 붙여넣기')})}});[].forEach.call(document.querySelectorAll('[data-add]'),function(b){b.onclick=function(){var p=b.dataset.add.split('|');addToRoster(p[0],+p[1])}});[].forEach.call(document.querySelectorAll('[data-drop]'),function(b){b.onclick=function(){if(b.dataset.armed){dropFromRoster(b.dataset.drop)}else{b.dataset.armed='1';b.classList.add('arm');b.textContent=b.dataset.drop+' · 제외?';setTimeout(function(){if(b.isConnected){b.dataset.armed='';b.classList.remove('arm');b.textContent=b.dataset.drop}},2600)}}});[].forEach.call(document.querySelectorAll('[data-cp]'),function(b){b.onclick=function(){copy(b.dataset.cp).then(function(){toast('미응답 명단을 복사했어요')})}});
   $('blink').onclick=function(){if(D)copy(location.href.replace(/admin\/?(index\.html)?([?#].*)?$/,'')).then(function(){toast('설문 링크를 복사했어요')});else toast('설문 링크는 배포 후 연결돼요')};
-  $('bnt').onclick=function(){repCopy('notice')};$('bns').onclick=function(){repSave('notice')};
+  $('bnt').onclick=function(){repCopy(TAB==='all'?'notice':+TAB)};$('bns').onclick=function(){repSave(TAB==='all'?'notice':+TAB)};
   $('bcp').onclick=function(){repCopy(TAB==='all'?'all':+TAB)};$('bsv').onclick=function(){repSave(TAB==='all'?'all':+TAB)}}
 var PM=null;
 
