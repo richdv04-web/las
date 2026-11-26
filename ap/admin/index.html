@@ -636,6 +636,8 @@ function md(s){var d=pd(s);return (d.getMonth()+1)+'/'+d.getDate()+'('+WKD[d.get
 function md2(s){var d=pd(s);return pad(d.getMonth()+1)+'.'+pad(d.getDate())+'('+WKD[d.getDay()]+')'}
 function dm(s){var d=pd(s);return d.getDate()}
 function rng(c){return md(add(c,3))+' – '+md(add(c,9))}
+function ms(s){var d=pd(s);return (d.getMonth()+1)+'/'+d.getDate()}
+function rs(c){return ms(add(c,3))+'~'+ms(add(c,9))}
 function wsub(c){return 'AP '+rng2(c)+'  ·  마감 '+md2(c)}
 function rng2(c){return md2(add(c,3))+' – '+md2(add(c,9))}
 function isME_(x){var v=(window.D&&D.settings||{})['monthend|'+x];return v==='Y'?true:v==='N'?false:isLastFri(x)}
@@ -1134,7 +1136,7 @@ function openWeeks(){
   if(!PM||gl.indexOf(PM)<0)PM=gstart(CY)||gl[gl.length-1];
   function draw(){var ix=gl.indexOf(PM),g=glab(PM),cs=gweeks(PM).filter(function(c){return c<=D.cycle}).reverse();
     $('wl').innerHTML='<div class="mn"><button id="mnp" aria-label="이전 달"'+(ix<=0?' disabled':'')+'>‹</button><b>'+g.y+'년 '+g.m+'월</b><button id="mnn" aria-label="다음 달"'+(ix>=gl.length-1?' disabled':'')+'>›</button></div>'+
-      cs.map(function(c){var C=calc(c),k=gweeks(PM).indexOf(c)+1;return '<button class="wi nop'+(c===CY?' on':'')+'" data-c="'+c+'"><b>'+k+'주차'+(c===D.cycle?'<em>진행 중</em>':'')+(C.me?'<em>'+nextMon(c)+'월 예상</em>':'')+'</b><span class="r">AP '+esc(rng(c))+' · 마감 '+esc(md(c))+'</span></button>'}).join('');
+      cs.map(function(c){var C=calc(c),k=gweeks(PM).indexOf(c)+1;return '<button class="wi nop'+(c===CY?' on':'')+'" data-c="'+c+'"><b>'+k+'주차'+(c===D.cycle?'<em>진행 중</em>':'')+(C.me?'<em>'+nextMon(c)+'월 예상</em>':'')+'</b><span class="r">AP '+esc(rs(c))+' · 마감 '+esc(ms(c))+'</span></button>'}).join('');
     $('mnp').onclick=function(){if(ix>0){PM=gl[ix-1];draw()}};$('mnn').onclick=function(){if(ix<gl.length-1){PM=gl[ix+1];draw()}};
     [].forEach.call($('wl').querySelectorAll('.wi'),function(b){b.onclick=function(){CY=b.dataset.c;$('wm').classList.remove('on');render();window.scrollTo(0,0)}})}
   var q=$('wq');q.value='';q.oninput=function(){var d=q.value.replace(/\D/g,''),y,m;if(d.length>=6){y=+d.slice(0,4);m=+d.slice(4,6)}else return;
