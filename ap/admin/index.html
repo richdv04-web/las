@@ -611,7 +611,7 @@ body{transition:padding-left .3s cubic-bezier(.32,.72,0,1)}
 .pgc{background:var(--card);border:1px solid var(--ln);border-radius:24px;padding:6px 22px 22px}
 .pgc>.sm-sec:first-child{margin-top:0;border-top:0;padding-top:18px}
 .pg .smbar{background:linear-gradient(to bottom,transparent,var(--card) 14px)}
-.pgw{display:flex;align-items:center;gap:12px;padding:18px 0 4px}.pgw span{font-size:13px;color:var(--mut);white-space:nowrap}.pgw .fld{max-width:280px}
+.pgw{display:flex;align-items:center;gap:12px;padding:18px 0 4px}.pgw span{font-size:13px;color:var(--mut);white-space:nowrap}
 .side .pl.act{background:var(--card2);border-color:var(--ln)}
 @media(max-width:719px){.pgc{padding:4px 16px 18px;border-radius:20px}}
 .rsel{display:flex;gap:8px;margin-bottom:8px}.rsel #smw{flex:1;min-width:0}.rsel #rq{width:150px;flex:none}
@@ -1061,7 +1061,7 @@ function xsBind(){Array.prototype.forEach.call(document.querySelectorAll('#smb .
   api('apiSetExclude',KEY,CY,n,!on).then(function(){D.settings['xstat|'+CY+'|'+n]=on?'N':'Y';t.classList.toggle('on',on);t.setAttribute('aria-checked',on);t.parentNode.querySelector('span').textContent=t.parentNode.querySelector('span').textContent.split(' · ')[0]+' · '+(on?'통계 포함':'통계 제외');toast(on?'통계에 포함했어요':'통계에서 제외했어요');render()},function(e){toast(errText(e),true)})}})}
 function kt(ts){var d=new Date(ts+9*3600000);return (d.getUTCMonth()+1)+'/'+d.getUTCDate()+' '+p2(d.getUTCHours())+':'+p2(d.getUTCMinutes())}
 function shSec(){var cs=cycles();
-  return '<div class="sm-sec"><h4>원본 응답</h4><div class="d">구글 시트에 쌓인 원본 응답이에요. 주차를 고르거나 이름으로 찾을 수 있어요.</div>'+wpkHTML('shw',cs,CY)+'<input class="fld" id="shq" placeholder="이름 검색" autocomplete="off" style="margin-bottom:8px"><div class="shw"><div id="sht"></div></div>'+(D.sheetUrl?'<a class="pl full" style="margin-top:10px;text-decoration:none" href="'+esc(D.sheetUrl)+'" target="_blank" rel="noopener">구글 시트에서 열기</a>':'')+'</div>'}
+  return '<div class="sm-sec"><h4>원본 응답</h4><div class="d">구글 시트에 쌓인 원본 응답이에요. 위에서 고른 기준 주차의 응답이에요. 이름으로 찾을 수 있어요.</div>'+'<input type="hidden" id="shw" value="'+CY+'">'+'<input class="fld" id="shq" placeholder="이름 검색" autocomplete="off" style="margin-bottom:8px"><div class="shw"><div id="sht"></div></div>'+(D.sheetUrl?'<a class="pl full" style="margin-top:10px;text-decoration:none" href="'+esc(D.sheetUrl)+'" target="_blank" rel="noopener">구글 시트에서 열기</a>':'')+'</div>'}
 function shBind(){function d(){var c=$('shw').value,q=$('shq').value.trim(),rs=D.responses.filter(function(r){return r.cycle===c&&(!q||r.name.indexOf(q)>-1)}).sort(function(a,z){return z.ts-a.ts}),me=isME(c);
   $('sht').innerHTML='<table class="sht"><thead><tr><th>제출</th><th>지점</th><th>성함</th><th>예정</th>'+(me?'<th>건/MIP</th>':'')+'<th>비고</th></tr></thead><tbody>'+(rs.length?rs.map(function(r){var nt=[];if(r.extra)nt.push('명단외');if(r.late)nt.push('공지후');if(r.extra&&(D.settings||{})['xstat|'+c+'|'+r.name]==='Y')nt.push('통계제외');return '<tr><td>'+kt(r.ts)+'</td><td>'+r.branch+'</td><td>'+esc(r.name)+'</td><td>'+(r.days.length?r.days.join(''):'없음')+'</td>'+(me?'<td>'+(r.contracts==null?'-':r.contracts+'/'+r.mip)+'</td>':'')+'<td>'+nt.join(' · ')+'</td></tr>'}).join(''):'<tr><td colspan="6" style="text-align:center;color:var(--mut)">응답이 없어요</td></tr>')+'</tbody></table><div class="d" style="margin:8px 0 0">총 '+rs.length+'건</div>'}
   $('shw').onchange=d;$('shq').oninput=d;d()}
