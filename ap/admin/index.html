@@ -982,13 +982,14 @@ function makeNoticeV(v){
       y+=th+PL;
       var MA=C.me?monthAvg(CY):null;
       if(MA&&MA.n){
-        c.fillStyle=line;c.fillRect(PL,y-12,W-PL*2,1.5);y+=54;var m0=y;tx(c,MA.label+'월 월평균',PL,m0+32,32,600,T.fg,'left',-.4);m0+=70;
-        tx(c,'월평균 응답률',PL,m0+34,28,600,LBC(c,PL,'월평균 응답률',28,600),'left',1);
-        numC(c,String(Math.round(MA.respP)),PL-8,m0+242,196,T.fg,300,'%',T.mut);
-        var mcx=W-PL-140,mcy=m0+170;gaugeDraw(c,134,mcx,mcy,MA.respP/100,pal.gold,T.dark,56);tx(c,MA.n+'주 평균',mcx,mcy+10,24,600,T.mut,'center');
-        var gk=glab(gstart(add(CY,-7))),pm=gk.m-1,py=gk.y;if(pm<1){pm=12;py--}
+        c.fillStyle=line;c.fillRect(PL,y-12,W-PL*2,1.5);        var gk=glab(gstart(add(CY,-7))),pm=gk.m-1,py=gk.y;if(pm<1){pm=12;py--}
         var pws=gweeks(py+'-'+pad(pm)).filter(function(z){return D.responses.some(function(r){return r.cycle===z})}),PR=null;
         if(pws.length){PR=[0,1,2].map(function(){return{r:0,b:0}});pws.forEach(function(z){calc(z).bs.forEach(function(b,i){PR[i].r+=b.resp;PR[i].b+=b.base})})}
+        var PT=PR?PR.reduce(function(q,z){return{r:q.r+z.r,b:q.b+z.b}},{r:0,b:0}):null;
+        y+=54;var m0=y;tx(c,MA.label+'월 월평균',PL,m0+32,32,600,T.fg,'left',-.4);m0+=70;
+        tx(c,'월평균 응답률',PL,m0+34,28,600,LBC(c,PL,'월평균 응답률',28,600),'left',1);
+        numC(c,String(Math.round(MA.respP)),PL-8,m0+242,196,T.fg,300,'%',T.mut);
+        var mcx=W-PL-140,mcy=m0+170;gaugeDraw(c,134,mcx,mcy,MA.respP/100,pal.gold,T.dark,56);if(PT&&PT.b){var dm_=Math.round(MA.respP)-Math.round(PT.r/PT.b*100);tx(c,'전월 대비',mcx,mcy-22,22,500,T.faint,'center');dpill(c,T,mcx,mcy+28,dm_,true,pal,pal.gold,true)}else tx(c,MA.n+'주 평균',mcx,mcy+10,24,600,T.mut,'center');
         var RH=124;y=m0+242+96;var h1=40+3*RH;card(P,y,IW,h1,ct,cb,[pal.gold,.84,.5,430]);
         function tickBar(x,yy,w,hh,ratio,col){var n=64,g=4,tw=(w-g*(n-1))/n,k=Math.round(Math.min(ratio,1)*n);for(var q=0;q<n;q++){rr(c,x+q*(tw+g),yy,tw,hh,tw/2);if(q<k){var t=k>1?q/(k-1):1;c.fillStyle=hexA(col,.32+.68*t)}else c.fillStyle=T.dark?'rgba(255,255,255,.2)':'rgba(0,0,0,.09)';c.fill()}}
         MA.bs.forEach(function(b,i){var ry=y+22+i*RH,rt_=b.base?b.resp/b.base*100:0;if(i){c.fillStyle=line;c.fillRect(P+52,ry-8,IW-104,1.5)}c.beginPath();c.arc(P+52+8,ry+38,8,0,7);c.fillStyle=pal.b[i];c.fill();tx(c,b.team,P+52+28,ry+48,30,700,T.fg);
