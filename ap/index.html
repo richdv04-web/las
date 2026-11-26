@@ -287,13 +287,23 @@ h1{margin:0;font-size:27px;line-height:1.28;font-weight:600;letter-spacing:-.035
 .hint:not(.ok){color:var(--gold);font-weight:600}
 body{padding-bottom:70px}
 
+/* 로딩: 데이터가 오기 전엔 빈 틀을 숨기고, 준비되면 한 번에 부드럽게 표시 */
+.card{position:relative}
+.card>.info,.card>.again,.card>.latenote,.card>.stepper,.card>.form,.card>.top em{transition:opacity .45s ease}
+.card.ld>.info,.card.ld>.again,.card.ld>.latenote,.card.ld>.stepper,.card.ld>.form,.card.ld>.top em{opacity:0;pointer-events:none}
+.ldr{display:none;position:absolute;left:0;right:0;top:150px;text-align:center;font-size:12px;font-weight:500;letter-spacing:.32em;color:var(--dim);animation:ldp 1.3s ease-in-out infinite}
+.card.ld .ldr{display:block}
+@keyframes ldp{50%{opacity:.3}}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
+<link rel="preconnect" href="https://script.google.com">
+<link rel="dns-prefetch" href="https://script.googleusercontent.com">
 </head>
 <body>
 <div class="bg" aria-hidden="true"></div>
 <div class="shell">
-<main class="card" id="card">
+<main class="card ld" id="card">
+  <div class="ldr" aria-hidden="true">LOADING</div>
   <header class="top"><div class="brand" role="img" aria-label="L.A.S AP CHECK"><svg class="wm" viewBox="-1 -1 183 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="miter"><path transform="translate(0 0)" d="M1 0V13H10"/><path transform="translate(17 0)" d="M.8 14L4.2 1H5.8L9.2 14"/><path transform="translate(34 0)" d="M10 1H3.2Q1 1 1 3.8Q1 7 3.2 7H6.8Q9 7 9 10Q9 13 6.8 13H0"/><path transform="translate(60 0)" d="M.8 14L4.2 1H5.8L9.2 14"/><path transform="translate(77 0)" d="M1 14V1H6.8Q9 1 9 4Q9 7 6.8 7H1"/><path transform="translate(103 0)" d="M10 1H3.2Q1 1 1 4V10Q1 13 3.2 13H10"/><path transform="translate(120 0)" d="M1 0V14M9 0V14M1 7H9"/><path transform="translate(137 0)" d="M0 1H10M0 7H10M0 13H10"/><path transform="translate(154 0)" d="M10 1H3.2Q1 1 1 4V10Q1 13 3.2 13H10"/><path transform="translate(171 0)" d="M1 0V14M9.2 1L1.6 7.6M3.8 6.2L9.2 13"/></svg></div><em id="wk">—</em></header>
 
   <section class="info">
@@ -524,8 +534,11 @@ body{padding-bottom:70px}
     $('sec-m').hidden=!info.monthEnd;
     $('mLab').textContent=nextMon()+'월 예상';
   }
-  async function load(){
-    if(HAS_GS){try{var j=await gs('apiInfo');info.cycle=j.cycle;info.deadline=j.deadline;info.monthEnd=j.monthEnd;st.roster=(j.roster||[]).map(function(p){return{branch:p.b,name:p.n};});return;}catch(e){document.getElementById('card').innerHTML='<div style="padding:60px 8px;text-align:center;color:#9C9A95;line-height:1.7">불러오지 못했어요.<br>잠시 후 다시 접속해 주세요.</div>';throw e;}}
+  function applyInfo(j){info.cycle=j.cycle;info.deadline=j.deadline;info.monthEnd=j.monthEnd;st.roster=(j.roster||[]).map(function(p){return{branch:p.b,name:p.n};});}
+  function kstCycle(){var d=new Date(Date.now()+9*36e5),back=(d.getUTCDay()-5+7)%7;d=new Date(d.getTime()-back*864e5);return d.getUTCFullYear()+'-'+pad(d.getUTCMonth()+1)+'-'+pad(d.getUTCDate());}
+  function readCache(){try{var c=JSON.parse(lget('ap_info')||'null');if(c&&c.j&&c.j.cycle===kstCycle()&&Date.now()-c.t<7*864e5)return c.j;}catch(e){}return null;}
+  async function load(silent){
+    if(HAS_GS){try{var j=await gs('apiInfo');applyInfo(j);lset('ap_info',JSON.stringify({t:Date.now(),j:j}));return;}catch(e){if(silent)return;document.getElementById('card').innerHTML='<div style="padding:60px 8px;text-align:center;color:#9C9A95;line-height:1.7">불러오지 못했어요.<br>잠시 후 다시 접속해 주세요.</div>';throw e;}}
     st.roster=DEMO;$('demo').classList.add('on');
     var d=new Date();d=new Date(d.getFullYear(),d.getMonth(),d.getDate());d.setDate(d.getDate()+((5-d.getDay()+7)%7));
     info.cycle=fd(d);info.deadline=new Date(info.cycle+'T17:00:00+09:00').getTime();info.monthEnd=false;
@@ -540,11 +553,20 @@ body{padding-bottom:70px}
     fin=false;$('card').classList.remove('fin');
     paintWeek();buildBar();paint();
   });
-  (async function(){
-    await load();
+  function first(){
     try{var last=JSON.parse(lget('ap_last')||'null');
       if(last&&st.roster.some(function(p){return p.branch===last.branch&&p.name===last.name;})){st.branch=last.branch;st.name=last.name;st.picked=true;nameEl.value=last.name;}}catch(e){}
     paintWeek();buildBar();renderBr();renderDays();paintCv();verify();paint();
+    $('card').classList.remove('ld');
+  }
+  (async function(){
+    var c=HAS_GS?readCache():null;
+    if(c){
+      applyInfo(c);first();
+      var sig=JSON.stringify([info.deadline,info.monthEnd,st.roster.length]);
+      await load(true);
+      if(JSON.stringify([info.deadline,info.monthEnd,st.roster.length])!==sig&&!fin){paintWeek();buildBar();renderDays();verify();paint();}
+    }else{await load();first();}
   })();
 })();
 </script>
