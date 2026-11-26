@@ -351,6 +351,21 @@ body:before,body:after{display:none!important}
 .mx .rw2 .c b,.mx .rw2 .m b{color:var(--fg);font-weight:700}
 .mx .ft{padding:0 0 22px;font-size:12.5px;color:var(--mut)}
 .mx .ft b{color:var(--fg)}
+.dvl{padding:6px 20px;margin-top:10px}
+.dvl .dr{display:grid;grid-template-columns:48px minmax(0,1fr) 30px;column-gap:14px;align-items:start;padding:16px 0;border-bottom:1px solid var(--ln)}
+.dvl .dr:last-child{border-bottom:0}
+.dvl .dd{display:flex;flex-direction:column;gap:3px;padding-top:6px}
+.dvl .dd b{font-size:16px;font-weight:700}
+.dvl .dd small{font-size:11.5px;color:var(--mut)}
+.dvl .we .dd b{color:var(--mut)}
+.dvl .dn{display:flex;flex-wrap:wrap;gap:6px;min-width:0}
+.dvl .dvc{position:relative;display:inline-flex;align-items:center;height:34px;padding:0 13px;border-radius:10px;background:var(--card2);font-size:14px;font-weight:550;white-space:nowrap}
+.dvl .dvc.lt{padding-left:20px}
+.dvl .dvc.lt:before{content:'';position:absolute;left:9px;top:50%;width:5px;height:5px;margin-top:-2.5px;border-radius:50%;background:var(--ac)}
+.dvl .dvc.ex{color:var(--ex)}
+.dvl .dz{display:inline-flex;align-items:center;height:34px;font-size:13px;color:var(--faint)}
+.dvl .dcn{text-align:right;font-size:20px;font-weight:600;letter-spacing:-.03em;padding-top:4px;font-variant-numeric:tabular-nums}
+.dvl .z .dcn{color:var(--faint);font-weight:400}
 .ml{padding:22px 22px 8px}
 .ml .mlh{display:flex;align-items:center;gap:8px;padding-bottom:14px;border-bottom:1px solid var(--ln)}
 .ml .mlh b{font-size:15px;font-weight:600;letter-spacing:-.02em}
@@ -1220,14 +1235,14 @@ function brView(b,C){
   h+=dayCard(b,false);
   var cp=b.pend.join(', ');
   h+='<div class="sech"><span class="t">명단</span><span class="sp"></span><span class="mini" id="vw"><button data-vw="person" class="'+(VW==='person'?'on':'')+'">인원별</button><button data-vw="day" class="'+(VW==='day'?'on':'')+'">요일별</button></span></div>';
-  h+='<div class="gl grp a" style="margin-bottom:14px"><div class="gh"><b>미응답'+(b.pend.length?'<button class="cpb" data-cp="'+esc(cp)+'">복사</button>':'')+'</b><em>'+b.pend.length+'</em></div><div class="names">'+(b.pend.length?b.pend.map(function(n){return ROLE==='edit'?'<button class="nmp xb2" data-drop="'+esc(n)+'" title="누르면 응답 대상에서 제외">'+esc(n)+'</button>':'<span class="nmp">'+esc(n)+'</span>'}).join(''):'<div class="none">전원 응답했어요</div>')+'</div>'+(ROLE==='edit'&&b.pend.length?'<div class="d2">응답 대상이 아닌 사람은 이름을 눌러 제외해요 (이 주차부터)</div>':'')+'</div>';
+  h+='<div class="gl grp a" style="margin-bottom:14px"><div class="gh"><b>미응답'+''+'</b><em>'+b.pend.length+'</em></div><div class="names">'+(b.pend.length?b.pend.map(function(n){return ROLE==='edit'?'<button class="nmp xb2" data-drop="'+esc(n)+'" title="누르면 응답 대상에서 제외">'+esc(n)+'</button>':'<span class="nmp">'+esc(n)+'</span>'}).join(''):'<div class="none">전원 응답했어요</div>')+'</div>'+(ROLE==='edit'&&b.pend.length?'<div class="d2">응답 대상이 아닌 사람은 이름을 눌러 제외해요 (이 주차부터)</div>':'')+'</div>';
   if(VW==='person'){
     var pl=b.all.filter(function(r){return r.days.length}).sort(function(a,z){return ko(a.name,z.name)}),nl=b.all.filter(function(r){return !r.days.length}).sort(function(a,z){return ko(a.name,z.name)});
     h+='<div class="gl grp"><div class="gh"><b>AP 예정</b><em>'+pl.length+'</em></div><div class="prs">'+(pl.length?pl.map(function(r){return '<div class="pr"><span class="pn">'+esc(r.name)+tags(r)+'</span><span class="d7">'+DAYS.map(function(d,i){return '<i class="'+(r.days.indexOf(d)>-1?'on':'')+(i>4?' we':'')+'">'+d+'</i>'}).join('')+'</span></div>'}).join(''):'<div class="none">없어요</div>')+'</div></div>';
     h+='<div class="gl grp g" style="margin-top:14px"><div class="gh"><b>예정 없음</b><em>'+nl.length+'</em></div><div class="names">'+(nl.length?nl.map(pill).join(''):'<div class="none">없어요</div>')+'</div></div>'}
   else{
-    h+='<div class="grps dv">'+DAYS.map(function(d,i){var ns=b.all.filter(function(r){return r.days.indexOf(d)>-1}).sort(function(a,z){return ko(a.name,z.name)});
-      return '<div class="gl grp'+(i>4?' g':'')+'"><div class="gh"><b>'+d+'요일<small>'+dm(add(CY,3+i))+'일</small></b><em>'+ns.length+'</em></div><div class="names">'+(ns.length?ns.map(pill).join(''):'<div class="none">없어요</div>')+'</div></div>'}).join('')+'</div>';
+    h+='<div class="gl dvl">'+DAYS.map(function(d,i){var ns=b.all.filter(function(r){return r.days.indexOf(d)>-1}).sort(function(a,z){return ko(a.name,z.name)});
+      return '<div class="dr'+(i>4?' we':'')+(ns.length?'':' z')+'"><div class="dd"><b>'+d+'</b><small>'+dm(add(CY,3+i))+'일</small></div><div class="dn">'+(ns.length?ns.map(function(r){return '<span class="dvc'+(r.extra?' ex':'')+(r.late?' lt':'')+'">'+esc(r.name)+'</span>'}).join(''):'<span class="dz">없음</span>')+'</div><div class="dcn">'+ns.length+'</div></div>'}).join('')+'</div>';
     var nl2=b.all.filter(function(r){return !r.days.length});h+='<div class="gl grp g nn"><div class="gh"><b>예정 없음</b><em>'+nl2.length+'</em></div><div class="names">'+(nl2.length?nl2.map(pill).join(''):'<div class="none">없어요</div>')+'</div></div>'}
   h+='<div class="legend2"><span><i style="background:var(--ac)"></i>공지 후 응답</span><span><i style="background:var(--ex)"></i>명단 외</span></div>';
   if(C.me){h+=monthBlock(b,false);
