@@ -642,6 +642,12 @@ function calc(c){
     day.forEach(function(v,i){o.day[i]+=v});o.dayB.push(day);o.mRows=o.mRows.concat(mr);
   });
   o.respP=pc(o.resp,o.base);o.avg=o.base?o.plan/o.base:0;return o}
+function monthAvg(c){var ch=[],x=add(c,-7),e0=x;for(var k=0;k<6;k++){ch.push(x);e0=x;if(isME(x))break;x=add(x,-7)}
+  var lm=isME(e0)?pd(add(e0,7)).getMonth()+1:pd(e0).getMonth()+1;
+  var cs=ch.filter(function(z){return D.responses.some(function(r){return r.cycle===z})}).reverse();
+  var o={label:lm,n:cs.length,cs:cs,resp:0,base:0,plan:0,bs:[0,1,2].map(function(i){return{i:i,team:BR[i+1].team,resp:0,base:0,plan:0}})};
+  cs.forEach(function(z){var C=calc(z);o.resp+=C.resp;o.base+=C.base;o.plan+=C.plan;C.bs.forEach(function(b,i){o.bs[i].resp+=b.resp;o.bs[i].base+=b.base;o.bs[i].plan+=b.plan})});
+  o.respP=o.base?o.resp/o.base*100:0;o.wk=o.n?o.plan/o.n:0;o.pc=o.base?o.plan/o.base:0;return o}
 function cycles(){var s={};D.responses.forEach(function(r){s[r.cycle]=1});if(D.cycle)s[D.cycle]=1;return Object.keys(s).sort().reverse()}
 var _id=0;
 
@@ -790,7 +796,16 @@ function makeNotice(){
       
       tx(c,ps,x1-off,ry,42,500,T.fg,'right');var pw=mw(c,ps,42,500);var bt=' / '+b.base+'명',bw=mw(c,bt,24,500),bx=x1-off-pw-20;tx(c,bt,bx,ry,24,500,T.mut,'right');tx(c,String(b.resp),bx-bw,ry,24,700,T.fg,'right');
       var f=Math.round((b.respP||0)/5),sw=(IW-88-4*19)/20;for(var q=0;q<20;q++){c.fillStyle=q<f?T.b[i]:'rgba(128,128,128,.28)';rr(c,P+44+q*(sw+4),ry+22,sw,18,4);c.fill()}});
-    y+=ph+P;return y}
+    y+=ph;
+    var M=C.me?monthAvg(CY):null;
+    if(M&&M.n){y+=28;var ex2=(C.mC||C.mM)?130:0,mh=300+3*92+ex2;glass(c,T,P,y,IW,mh,48,LN);
+      tx(c,M.label+'월 월평균',P+44,y+84,32,600,T.fg);tx(c,M.n+'주 기준',W-P-44,y+84,26,500,T.mut,'right');
+      var cw3=(IW-88)/3;[['응답률',fx(M.respP,1),'%'],['주평균 AP 예정',fx(M.wk,0),'건'],['인당 평균',fx(M.pc,2),'건']].forEach(function(t,i){var x=P+44+i*cw3;tx(c,t[0],x,y+146,22,600,T.mut);numC(c,t[1],x-4,y+232,76,T.fg,300,t[2],T.mut)});
+      M.bs.forEach(function(b,i){var ry=y+318+i*92;c.fillStyle=T.ln;c.fillRect(P+44,ry-44,IW-88,1.5);c.beginPath();c.arc(P+44+8,ry+6,8,0,7);c.fillStyle=T.b[i];c.fill();tx(c,b.team,P+44+28,ry+14,28,700,T.fg);
+        var r1=b.base?fx(b.resp/b.base*100,1)+'%':'–',r2=M.n?fx(b.plan/M.n,0)+'건/주':'–';tx(c,r1,W-P-44,ry+14,30,500,T.fg,'right');tx(c,r2,W-P-44-mw(c,r1,30,500)-26,ry+14,24,500,T.mut,'right')});
+      if(ex2){var ey=y+318+3*92;c.fillStyle=T.ln;c.fillRect(P+44,ey-44,IW-88,1.5);tx(c,nextMon(CY)+'월 예상',P+44,ey+20,28,700,T.fg);var v1=C.mC+'건',v2=won(C.mM)+'만원';tx(c,v2,W-P-44,ey+20,30,600,T.fg,'right');tx(c,v1,W-P-44-mw(c,v2,30,600)-26,ey+20,26,500,T.mut,'right')}
+      y+=mh}
+    y+=P;return y}
   var s0=document.createElement('canvas');s0.width=W;s0.height=10;var H=Math.ceil(paint(s0.getContext('2d'),0));
   var cv=document.createElement('canvas');cv.width=W*S;cv.height=H*S;var c=cv.getContext('2d');c.imageSmoothingQuality='high';c.scale(S,S);paint(c,H);return cv}
 
@@ -1002,7 +1017,7 @@ function shBind(){function d(){var c=$('shw').value,q=$('shq').value.trim(),rs=D
 function openSettings(){
   var h='';
   if(ROLE==='edit'){
-    var es={};D.snaps.forEach(function(s){es[s.eff]=1});es[D.cycle]=1;es[fri(D.cycle,7)]=1;es[fri(D.cycle,14)]=1;var el=Object.keys(es).sort().reverse(),have={};D.snaps.forEach(function(s){have[s.eff]=1});
+    var es={};D.snaps.forEach(function(s){es[s.eff]=1});es[D.cycle]=1;for(var kk=1;kk<=7;kk++)es[fri(D.cycle,7*kk)]=1;var el=Object.keys(es).sort().reverse(),have={};D.snaps.forEach(function(s){have[s.eff]=1});
     h+='<div class="sm-sec"><h4>명단 관리</h4><div class="d">이름을 직접 입력해 <b>추가·제외</b>하거나 목록에서 눌러 제외/복구해요. 선택한 <b>적용 주차부터</b> 반영되고 이전 주차는 그대로예요.</div>'+
       '<select class="fld" id="smw" style="margin-bottom:8px">'+el.map(function(e){return '<option value="'+e+'"'+(e===D.cycle?' selected':'')+'>'+esc(wlabel(e))+' · '+e.slice(5).replace('-','/')+' 금'+(have[e]?' · 저장됨':'')+'</option>'}).join('')+'</select>'+
       '<div class="sadd"><div class="smmd" id="smmd"><button data-m="add">추가</button><button data-m="del">제외</button></div><div class="sbr" id="smb3"></div><div class="sar"><input class="fld" id="sma" placeholder="새 이름 입력 (여러 명은 띄어쓰기·쉼표로)" autocomplete="off" enterkeyhint="done"><button class="pl" id="smab">추가</button></div><div class="sgl" id="smsg"></div></div><div id="smc"></div>'+
