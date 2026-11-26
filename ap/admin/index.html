@@ -1123,7 +1123,7 @@ function renderDash(){
   h+='<div class="nt"><button class="nb" id="bnt">'+ICO.mg+'<div><b>공지용 이미지 복사</b><span>전체 응답률 + 지점별 응답률 · 최대 화질</span></div></button><button class="ib" id="bns" aria-label="공지용 이미지 저장">'+ICO.dl+'</button></div>';
   h+=TAB==='all'?allView(C):'<div class="brv" style="--bc:var(--b'+(+TAB%3+1)+')">'+brView(C.bs[+TAB],C)+'</div>';
   say(h);
-  $('tmt').textContent=nowTxt(D.now)+' 기준';$('hdl').innerHTML='<span>제출기한 '+md(CY)+' 17:00</span>'+(cur?'<span class="mark ac">진행 중</span>':'')+(C.me?'<span class="mark">'+nextMon(CY)+'월 예상</span>':'');
+  $('tmt').textContent=nowTxt(D.now)+' 기준';$('hdl').innerHTML=(cur?'<span class="mark ac">진행 중</span>':'')+(C.me?'<span class="mark">'+nextMon(CY)+'월 예상</span>':'');
   $('wpick').onclick=openWeeks;
   $('tabs').onclick=function(e){var b=e.target.closest('button');if(!b)return;TAB=b.dataset.t;render();window.scrollTo(0,0)};
   [].forEach.call(document.querySelectorAll('[data-go]'),function(b){b.onclick=function(){TAB=b.dataset.go;render();window.scrollTo(0,0)}});
