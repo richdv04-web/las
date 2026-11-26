@@ -358,7 +358,7 @@ body:before,body:after{display:none!important}
 .ml .mlh .cpb{margin-left:auto}
 .ml .mr{display:grid;grid-template-columns:minmax(0,1fr) 40px 104px;align-items:center;column-gap:12px;padding:15px 0;border-bottom:1px solid var(--ln);font-size:14px}
 .ml .mr:last-child{border-bottom:0}
-.ml .mn{font-weight:600;display:flex;align-items:center;gap:8px;min-width:0}
+.ml .mnm{font-weight:600;display:flex;align-items:center;gap:8px;min-width:0}
 .ml .mc{text-align:right;color:var(--mut);font-size:12.5px;white-space:nowrap}
 .ml .mv{text-align:right;color:var(--mut);font-size:12px;white-space:nowrap;font-variant-numeric:tabular-nums}
 .ml .mv b{color:var(--fg);font-size:17px;font-weight:700;margin-right:2px}
@@ -1233,7 +1233,7 @@ function brView(b,C){
   if(C.me){h+=monthBlock(b,false);
     var rs=b.mRows.slice().sort(function(a,z){return (z.mip||0)-(a.mip||0)||ko(a.name,z.name)});
     var xr=xlRows(b.mRows);
-    h+='<div class="gl ml"><div class="mlh"><b>개인별 예상</b><span class="mlc">'+xr.length+'명</span>'+(xr.length?'<button class="cpb" data-xl="'+xlTxt(b.mRows)+'">엑셀 복사</button>':'')+'</div>'+(xr.length?xr.map(function(r){return '<div class="mr"><span class="mn">'+esc(r.name)+tags(r)+'</span><span class="mc">'+(r.contracts||0)+'건</span><span class="mv"><b>'+won(r.mip)+'</b>만원</span></div>'}).join(''):'<div class="none" style="padding:18px 0 14px">입력된 예상이 없어요</div>')+'</div>'}
+    h+='<div class="gl ml"><div class="mlh"><b>개인별 예상</b><span class="mlc">'+xr.length+'명</span>'+(xr.length?'<button class="cpb" data-xl="'+xlTxt(b.mRows)+'">엑셀 복사</button>':'')+'</div>'+(xr.length?xr.map(function(r){return '<div class="mr"><span class="mnm">'+esc(r.name)+tags(r)+'</span><span class="mc">'+(r.contracts||0)+'건</span><span class="mv"><b>'+won(r.mip)+'</b>만원</span></div>'}).join(''):'<div class="none" style="padding:18px 0 14px">입력된 예상이 없어요</div>')+'</div>'}
   h+=notes(b);return h}
 boot();
 </script></body></html>
