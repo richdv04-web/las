@@ -617,8 +617,8 @@ body{transition:padding-left .3s cubic-bezier(.32,.72,0,1)}
 .rsel{display:flex;gap:8px;margin-bottom:8px}.rsel #smw{flex:1;min-width:0}.rsel #rq{width:150px;flex:none}
 @media(max-width:480px){.rsel #rq{width:116px}}
 .pgw{display:block;padding:18px 0 4px}.pgw>span{display:block;font-size:13px;color:var(--mut);margin-bottom:8px}
-.wpk{margin-bottom:10px}.wpt{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px;margin-bottom:10px}.wpt .wq{height:46px;margin:0}.wpt .mn{margin:0}.wpl{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:8px}.wpl .wi.nop{width:100%}
-@media(max-width:560px){.wpt{grid-template-columns:1fr}.wpl{grid-template-columns:1fr}}
+.wpk{margin-bottom:10px}.wpt{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px;margin-bottom:10px}.wpt .wq{height:46px;margin:0}.wpt .mn{margin:0}.wpl{display:grid;grid-template-columns:1fr;gap:8px}.wpl .wi.nop{width:100%}
+@media(max-width:560px){.wpt{grid-template-columns:1fr}}
 </style></head><body><aside class="side" id="side"><div class="sgh"><span class="wm">L.A.S<i></i></span></div><div class="sg">메뉴</div><button class="pl nv act" id="nvd" data-v="dash"></button><button class="pl nv" id="nvr" data-v="roster" style="display:none"></button><button class="pl nv" id="nvp" data-v="resp" style="display:none"></button><button class="pl nv" id="nvk" data-v="key" style="display:none"></button><div class="sg">공유</div><button class="pl" id="blink" aria-label="설문 링크"></button><button class="pl pri" id="bcp" aria-label="이미지 복사"></button><button class="pl" id="bsv" aria-label="저장"></button><div class="sg">도구</div><button class="pl" id="bref" aria-label="새로고침"></button></aside><div class="scrim" id="scrim"></div><header class="top"><div class="in"><button class="ib" id="sbt" aria-label="사이드바" style="display:none"></button><button class="ib" id="thm"></button><span class="sp"></span><span class="wm">L.A.S<i></i></span></div></header>
 <main class="wrap" id="root"><div class="sk"></div><div class="sk" style="width:60%"></div><div class="sk" style="height:160px;border-radius:20px"></div></main>
 <div class="mo" id="wm"><div class="sh"><div class="hd2"><h3 style="margin:0">주차 선택</h3><button class="xb" id="wx" aria-label="닫기"></button></div><div class="sub">금요일 기준 주차 · 신청일 다음 주 월~일 AP</div><input class="fld" id="wq" placeholder="월 바로가기 (예: 202612)" inputmode="numeric" autocomplete="off" maxlength="7" style="margin-bottom:10px"><div class="wl" id="wl"></div></div></div>
@@ -1081,10 +1081,10 @@ function wpkDraw(id){var S=WPK[id],box=$('wpk_'+id);if(!S||!box)return;
   var gs={};S.list.forEach(function(c){var g=gstart(c);if(g)gs[g]=1});var gl=Object.keys(gs).sort();
   if(!S.pm||gl.indexOf(S.pm)<0)S.pm=gstart(S.sel)||gl[gl.length-1];
   var ix=gl.indexOf(S.pm),g=glab(S.pm),cs=gweeks(S.pm).filter(function(c){return S.list.indexOf(c)>-1}).reverse(),all=gweeks(S.pm);
-  box.innerHTML='<div class="wpt"><input class="fld wq" placeholder="월 바로가기 (예: 202612)" inputmode="numeric" autocomplete="off" maxlength="7"><div class="mn"><button type="button" class="mp" aria-label="이전 달"'+(ix<=0?' disabled':'')+'>‹</button><b>'+g.y+'년 '+g.m+'월</b><button type="button" class="mx" aria-label="다음 달"'+(ix>=gl.length-1?' disabled':'')+'>›</button></div></div>'+
+  box.innerHTML='<div class="wpt"><input class="fld wq" placeholder="월 바로가기 (예: 202612)" inputmode="numeric" autocomplete="off" maxlength="7"><div class="mn"><button type="button" class="wpp" aria-label="이전 달"'+(ix<=0?' disabled':'')+'>‹</button><b>'+g.y+'년 '+g.m+'월</b><button type="button" class="wpn" aria-label="다음 달"'+(ix>=gl.length-1?' disabled':'')+'>›</button></div></div>'+
     '<div class="wpl">'+cs.map(function(c){return '<button type="button" class="wi nop'+(c===S.sel?' on':'')+'" data-c="'+c+'"><b>'+(all.indexOf(c)+1)+'주차'+(c===D.cycle?'<em>진행 중</em>':'')+(isME(c)?'<em>'+nextMon(c)+'월 예상</em>':'')+(S.have[c]?'<em>저장됨</em>':'')+'</b><span class="r">AP '+esc(rs(c))+' · 공지 '+esc(ms(c))+'</span></button>'}).join('')+'</div>';
-  box.querySelector('.mp').onclick=function(){if(ix>0){S.pm=gl[ix-1];wpkDraw(id)}};
-  box.querySelector('.mx').onclick=function(){if(ix<gl.length-1){S.pm=gl[ix+1];wpkDraw(id)}};
+  box.querySelector('.wpp').onclick=function(){if(ix>0){S.pm=gl[ix-1];wpkDraw(id)}};
+  box.querySelector('.wpn').onclick=function(){if(ix<gl.length-1){S.pm=gl[ix+1];wpkDraw(id)}};
   var q=box.querySelector('.wq');q.oninput=function(){var d=q.value.replace(/\D/g,'');if(d.length<6)return;var y=+d.slice(0,4),m=+d.slice(4,6);
     var hit=gl.filter(function(k){var l=glab(k);return l.y===y&&l.m===m})[0];if(hit){S.pm=hit;wpkDraw(id)}else{q.style.borderColor='#CF8E8E';toast(y+'년 '+m+'월은 선택할 수 없어요',true)}};
   q.onkeydown=function(e){if(e.key==='Enter')q.oninput()};
