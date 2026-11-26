@@ -400,7 +400,7 @@ html[data-theme=light] .d7 i.on{color:#fff}
 
 .wl{display:grid;gap:8px;margin-top:6px}
 .wi{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 12px;align-items:center;text-align:left;padding:14px 16px;border-radius:18px;background:var(--card2);width:100%}
-.wi.nop{grid-template-columns:minmax(0,1fr)}
+.wi.nop{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:0 18px;min-height:56px;border-radius:16px}.wi.nop b{font-size:15px;white-space:nowrap}.wi.nop span.r{white-space:nowrap;font-size:13px}
 .mn{display:flex;align-items:center;justify-content:space-between;margin:2px 0 12px}.mn b{font-size:16px;font-weight:700;letter-spacing:-.02em}.mn button{width:38px;height:38px;border-radius:50%;background:var(--card2);font-size:20px;line-height:1;display:flex;align-items:center;justify-content:center}.mn button:disabled{opacity:.3}
 .wi.on{background:var(--pill);color:var(--onpill)}
 .wi b{font-size:15px;font-weight:700;letter-spacing:-.02em;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
@@ -1054,7 +1054,7 @@ function render(){
   h+='<div class="nt"><button class="nb" id="bnt">'+ICO.mg+'<div><b>공지용 이미지 복사</b><span>전체 응답률 + 지점별 응답률 · 최대 화질</span></div></button><button class="ib" id="bns" aria-label="공지용 이미지 저장">'+ICO.dl+'</button></div>';
   h+=TAB==='all'?allView(C):'<div class="brv" style="--bc:var(--b'+(+TAB%3+1)+')">'+brView(C.bs[+TAB],C)+'</div>';
   say(h);
-  $('tmt').textContent=nowTxt(D.now)+' 기준';$('hdl').innerHTML='<span>제출기한 '+md(CY)+' 17:00</span>'+(cur?'<span class="mark ac">진행 중</span>':'')+(C.me?'<span class="mark">'+glab(gstart(CY)||CY).m+'월 예상 설문</span>':'');
+  $('tmt').textContent=nowTxt(D.now)+' 기준';$('hdl').innerHTML='<span>제출기한 '+md(CY)+' 17:00</span>'+(cur?'<span class="mark ac">진행 중</span>':'')+(C.me?'<span class="mark">'+glab(gstart(CY)||CY).m+'월 예상</span>':'');
   $('wpick').onclick=openWeeks;
   $('tabs').onclick=function(e){var b=e.target.closest('button');if(!b)return;TAB=b.dataset.t;render();window.scrollTo(0,0)};
   [].forEach.call(document.querySelectorAll('[data-go]'),function(b){b.onclick=function(){TAB=b.dataset.go;render();window.scrollTo(0,0)}});
