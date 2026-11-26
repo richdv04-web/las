@@ -802,15 +802,6 @@ function makeReport(k){
     [['AP 예정',String(X.plan),'건','예정 인원 '+X.ppl+'명'],['예정 없음',String(X.none),'명','응답자 중']].forEach(function(t,i){var x=P+i*(cw+20);glass(c,T,x,y,cw,250,40);tx(c,t[0],x+38,y+66,24,600,T.mut);numC(c,t[1],x+34,y+176,120,T.fg,300,t[2],T.mut);tx(c,t[3],x+38,y+222,24,500,T.mut)});
     y+=270;
     
-    var ph=B?520:580;glass(c,T,P,y,IW,ph,48);tx(c,'요일별 AP 예정 인원',P+44,y+84,32,600,T.fg);tx(c,X.plan+'건',W-P-44,y+84,28,700,T.fg,'right');
-    var dv=B?B.day:C.day,mxv=Math.max(1,Math.max.apply(null,dv)),pk=dv.indexOf(Math.max.apply(null,dv)),cwid=(IW-88)/7,bh=250,base=y+400;
-    dv.forEach(function(v,i){var cx=P+44+cwid*i+cwid/2,bw=Math.min(60,cwid-14);rr(c,cx-bw/2,base-bh,bw,bh,16);c.fillStyle=T.ln;c.fill();
-      var hh2=v/mxv*bh,yy=base;
-      if(B){if(v){rr(c,cx-bw/2,base-Math.max(hh2,6),bw,Math.max(hh2,6),16);c.fillStyle=T.b[B.i];c.fill()}}
-      else{c.save();rr(c,cx-bw/2,base-bh,bw,bh,16);c.clip();C.dayB.forEach(function(d,bi){var hb=d[i]/mxv*bh;if(hb>0){c.fillStyle=T.b[bi];c.fillRect(cx-bw/2,yy-hb,bw,hb);yy-=hb}});c.restore()}
-      tx(c,String(v),cx,base-bh-18,30,600,i===pk&&v?T.acT:T.fg,'center');tx(c,DAYS[i],cx,base+46,26,700,i>4?T.faint:T.fg,'center');tx(c,String(dm(add(CY,3+i))),cx,base+78,20,500,T.faint,'center')});
-    if(!B){var lx=P+44,nm=C.bs.map(function(b){return b.team});nm.forEach(function(n,i){c.beginPath();c.arc(lx+7,y+ph-34-8,7,0,7);c.fillStyle=T.b[i];c.fill();tx(c,n+' '+C.bs[i].plan+'건',lx+24,y+ph-34,22,500,T.mut);lx+=mw(c,n+' '+C.bs[i].plan+'건',22,500)+60})}
-    y+=ph+28;
     if(!B){
       tx(c,'지점별',P+4,y+34,26,700,T.mut);y+=64;
       var gs=[['응답률',function(b){return b.respP},function(b){return b.resp+' / '+b.base+'명'}],['AP 예정 건수',function(b){return C.plan?Math.round(b.plan/Math.max.apply(null,C.bs.map(function(z){return z.plan}))*100):0},function(b){return b.plan+'건'}]],gh=104+3*104+20,pp2=gs.length*gh+30;glass(c,T,P,y,IW,pp2,40);
