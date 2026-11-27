@@ -1077,7 +1077,7 @@ function RTS(){var t=rtv();return '<div class="rts" id="rts"><button data-t="lig
 function repBind(){$('rpx').onclick=function(){$('rpm').classList.remove('on')};$('rpm').addEventListener('click',function(e){if(e.target===$('rpm'))$('rpm').classList.remove('on')})}
 
 
-var CK={pend:1,plan:1,none:1,ml:1};var D=null,CY=null,TAB='all',VW='person',LOADED=false,KEY='',ROLE='';
+var CK={pend:1,plan:0,none:1,ml:0};var D=null,CY=null,TAB='all',VW='person',LOADED=false,KEY='',ROLE='';
 function say(h){$('root').innerHTML=h}
 function boot(){
   $('bref').innerHTML=ICO.ref+'<span class="t">새로고침</span>';navInit();$('sbt').innerHTML=ICO.pn;initSide();$('smx').innerHTML=ICO.x;$('smx').onclick=function(){$('sm').classList.remove('on')};$('blink').innerHTML=ICO.link+'<span class="t">설문 링크</span>';$('bcp').innerHTML=ICO.cp+'<span class="t">이미지 복사</span>';$('bsv').innerHTML=ICO.dl+'<span class="t">저장</span>';bindTheme();repBind();
