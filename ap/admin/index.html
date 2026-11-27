@@ -716,7 +716,7 @@ function xlTxt(rs){return encodeURIComponent(xlRows(rs).map(function(r){return r
 function rosterAt(c){var s=D.snaps||[],pick=s[0];s.forEach(function(x){if(x.eff<=c)pick=x});return pick?pick.rows.filter(function(r){return r.y!==false}):[]}
 function isME(c){var v=(D.settings||{})['monthend|'+c];return v==='Y'?true:v==='N'?false:isLastFri(c)}
 function calc(c){
-  var R=rosterAt(c),me=isME(c),o={c:c,me:me,bs:[],base:0,resp:0,pendN:0,extra:0,late:0,plan:0,ppl:0,none:0,day:[0,0,0,0,0,0,0],dayB:[],mC:0,mM:0,mN:0,mRows:[]};
+  var R=rosterAt(c),me=isME(c),o={c:c,me:me,ml:gstart(c)!==gstart(add(c,7)),bs:[],base:0,resp:0,pendN:0,extra:0,late:0,plan:0,ppl:0,none:0,day:[0,0,0,0,0,0,0],dayB:[],mC:0,mM:0,mN:0,mRows:[]};
   [1,2,3].forEach(function(b,bi){
     var ros=R.filter(function(r){return r.b===b}).map(function(r){return r.n}),map={},rows=D.responses.filter(function(r){return r.cycle===c&&r.branch===b});
     rows.forEach(function(r){map[r.name]=r});
@@ -733,7 +733,7 @@ function calc(c){
     day.forEach(function(v,i){o.day[i]+=v});o.dayB.push(day);o.mRows=o.mRows.concat(mr);
   });
   o.respP=pc(o.resp,o.base);o.avg=o.base?o.plan/o.base:0;return o}
-function monthAvg(c){var T=gstart(add(c,-7)),ws=gweeks(T).filter(function(z){return z<c&&D.responses.some(function(r){return r.cycle===z})});
+function monthAvg(c){var T=gstart(c),ws=gweeks(T).filter(function(z){return z<=c&&D.responses.some(function(r){return r.cycle===z})});
   var o={label:glab(T).m,n:ws.length,cs:ws,resp:0,base:0,plan:0,bs:[0,1,2].map(function(i){return{i:i,team:BR[i+1].team,resp:0,base:0,plan:0}})};
   ws.forEach(function(z){var C=calc(z);o.resp+=C.resp;o.base+=C.base;o.plan+=C.plan;C.bs.forEach(function(b,i){o.bs[i].resp+=b.resp;o.bs[i].base+=b.base;o.bs[i].plan+=b.plan})});
   o.respP=o.base?o.resp/o.base*100:0;o.wk=o.n?o.plan/o.n:0;o.pc=o.base?o.plan/o.base:0;return o}
@@ -882,7 +882,7 @@ function makeNotice(){
       tx(c,ps,x1-off,ry,42,500,T.fg,'right');var pw=mw(c,ps,42,500);var bt=' / '+b.base+'명',bw=mw(c,bt,24,500),bx=x1-off-pw-20;tx(c,bt,bx,ry,24,500,T.mut,'right');tx(c,String(b.resp),bx-bw,ry,24,700,T.fg,'right');
       var f=Math.round((b.respP||0)/5),sw=(IW-88-4*19)/20;for(var q=0;q<20;q++){c.fillStyle=q<f?T.b[i]:'rgba(128,128,128,.28)';rr(c,P+44+q*(sw+4),ry+22,sw,18,4);c.fill()}});
     y+=ph;
-    var M=C.me?monthAvg(CY):null;
+    var M=C.ml?monthAvg(CY):null;
     if(M&&M.n){y+=28;var ex2=(C.mC||C.mM)?130:0,mh=300+3*92+ex2;glass(c,T,P,y,IW,mh,48,LN);
       tx(c,M.label+'월 월평균',P+44,y+84,32,600,T.fg);tx(c,M.n+'주 기준',W-P-44,y+84,26,500,T.mut,'right');
       var cw3=(IW-88)/3;[['응답률',fx(M.respP,1),'%'],['주평균 AP 예정',fx(M.wk,0),'건'],['인당 평균',fx(M.pc,2),'건']].forEach(function(t,i){var x=P+44+i*cw3;tx(c,t[0],x,y+146,22,600,T.mut);numC(c,t[1],x-4,y+232,76,T.fg,300,t[2],T.mut)});
@@ -976,9 +976,9 @@ function makeNoticeV(v){
         var ct2=' / '+o.b.base+'명',w1=mw(c,String(o.b.resp),28,700),w2=mw(c,ct2,28,500),sx=rcx-(w1+w2)/2;var cy2=sm?y+316:y+394;tx(c,String(o.b.resp),sx,cy2,28,700,T.fg);tx(c,ct2,sx+w1,cy2,28,500,T.mut);
         if(o.d!=null)dpill(c,T,rcx,sm?y+362:y+440,o.d,false,pal,o.col,true)});
       y+=th+PL;
-      var MA=C.me?monthAvg(CY):null;
+      var MA=C.ml?monthAvg(CY):null;
       if(MA&&MA.n){
-        c.fillStyle=line;c.fillRect(PL,y-12,W-PL*2,1.5);        var gk=glab(gstart(add(CY,-7))),pm=gk.m-1,py=gk.y;if(pm<1){pm=12;py--}
+        c.fillStyle=line;c.fillRect(PL,y-12,W-PL*2,1.5);        var gk=glab(gstart(CY)),pm=gk.m-1,py=gk.y;if(pm<1){pm=12;py--}
         var pws=gweeks(py+'-'+pad(pm)).filter(function(z){return D.responses.some(function(r){return r.cycle===z})}),PR=null;
         if(pws.length){PR=[0,1,2].map(function(){return{r:0,b:0}});pws.forEach(function(z){calc(z).bs.forEach(function(b,i){PR[i].r+=b.resp;PR[i].b+=b.base})})}
         var PT=PR?PR.reduce(function(q,z){return{r:q.r+z.r,b:q.b+z.b}},{r:0,b:0}):null;
@@ -1175,7 +1175,7 @@ function renderDash(){
   var C=calc(CY),cs=cycles(),late=D.now>new Date(CY+'T17:00:00+09:00').getTime(),cur=CY===D.cycle;
   var h='<div class="hdr"><div class="hnow" id="tmt"></div><h1 class="ttl">LAS AP Check</h1><div class="hwk"><div class="wkt"><b>'+esc(wlabel(CY))+'</b><span>·</span><span>'+esc(wsub(CY))+'</span></div><button class="pl wp" id="wpick">주차 선택'+ICO.chd+'</button></div><div class="hdl" id="hdl"></div></div>';
   h+='<div class="seg" id="tabs"><button data-t="all" class="'+(TAB==='all'?'on':'')+'">전체</button>'+C.bs.map(function(b,i){return '<button data-t="'+i+'" class="'+(String(i)===TAB?'on':'')+'">'+dot(i)+esc(b.team)+'</button>'}).join('')+'</div>';
-  h+=TAB==='all'?'<div class="nt"><button class="nb" id="bnt">'+ICO.mg+'<div><b>공지용 이미지 복사</b><span>전체 응답률'+(C.me?' + 월별 통계':'')+' · 지점별 응답률 · 최대 화질</span></div></button>'+RTS()+'<button class="ib" id="bns" aria-label="공지용 이미지 저장">'+ICO.dl+'</button></div>':'<div class="nt"><button class="nb" id="bnt">'+ICO.mg+'<div><b>'+esc(C.bs[+TAB].team)+' 이미지 복사</b><span>이 지점 현황만 · 최대 화질</span></div></button>'+RTS()+'<button class="ib" id="bns" aria-label="지점 이미지 저장">'+ICO.dl+'</button></div>';
+  h+=TAB==='all'?'<div class="nt"><button class="nb" id="bnt">'+ICO.mg+'<div><b>공지용 이미지 복사</b><span>전체 응답률'+(C.ml?' + 월별 통계':'')+' · 지점별 응답률 · 최대 화질</span></div></button>'+RTS()+'<button class="ib" id="bns" aria-label="공지용 이미지 저장">'+ICO.dl+'</button></div>':'<div class="nt"><button class="nb" id="bnt">'+ICO.mg+'<div><b>'+esc(C.bs[+TAB].team)+' 이미지 복사</b><span>이 지점 현황만 · 최대 화질</span></div></button>'+RTS()+'<button class="ib" id="bns" aria-label="지점 이미지 저장">'+ICO.dl+'</button></div>';
   h+=TAB==='all'?allView(C):'<div class="brv" style="--bc:var(--b'+(+TAB%3+1)+')">'+brView(C.bs[+TAB],C)+'</div>';
   say(h);
   $('tmt').textContent=nowTxt(D.now)+' 기준';$('hdl').innerHTML=(cur?'<span class="mark ac">진행 중</span>':'')+(C.me?'<span class="mark">'+nextMon(CY)+'월 예상</span>':'');
