@@ -969,7 +969,20 @@ function makeNoticeV(v,bi){
         var bx=PL,by=y0+290;[['응답 '+B.resp+'명',T.fg],['미응답 '+(B.base-B.resp)+'명',T.mut],['대상 '+B.base+'명',T.mut]].forEach(function(ch){var cw=mw(c,ch[0],24,600)+36;rr(c,bx,by,cw,48,24);c.fillStyle=T.dark?'rgba(255,255,255,.06)':'rgba(0,0,0,.05)';c.fill();c.strokeStyle=T.dark?'rgba(255,255,255,.10)':'rgba(0,0,0,.08)';c.lineWidth=1.5;c.stroke();tx(c,ch[0],bx+18,by+32,24,600,ch[1]);bx+=cw+12});
         var gx=W-PL-140,gy=y0+170;gaugeDraw(c,134,gx,gy,B.base?B.resp/B.base:0,col,T.dark,56);
         if(o.d!=null){tx(c,'지난주 대비',gx,gy-22,22,500,T.faint,'center');dpill(c,T,gx,gy+28,o.d,true,pal,col,true)}else tx(c,String(B.resp),gx,gy+10,54,700,T.fg,'center');
-        y=y0+290+48+PL*1.5;
+        y=y0+290+48+64;
+        function pills(list,x0,y0_,maxW,tc,dr){var x=x0,yy=y0_;list.forEach(function(r){var nm=r.name||r,tg=r.late?'마감후':r.extra?'명단외':'',w1=mw(c,nm,25,500),w2=tg?mw(c,tg,17,700)+10:0,w=w1+44+w2;if(x+w>x0+maxW){x=x0;yy+=64}if(dr){rr(c,x,yy,w,52,26);c.fillStyle=T.dark?'rgba(255,255,255,.07)':'rgba(0,0,0,.05)';c.fill();tx(c,nm,x+22,yy+35,25,500,tc);if(tg)tx(c,tg,x+22+w1+10,yy+34,17,700,r.extra?T.ex:T.acT)}x+=w+10});return yy+52-y0_}
+        function listCard(title,list,tc,emptyT){var inW=IW-88,ph=list.length?pills(list,0,0,inW,tc,false):44,h=130+ph+8;card(P,y,IW,h,ct,cb);tx(c,title,P+44,y+72,28,700,T.fg);tx(c,String(list.length),W-P-44-mw(c,'명',24,500)-6,y+74,50,300,T.fg,'right');tx(c,'명',W-P-44,y+74,24,500,T.mut,'right');if(list.length)pills(list,P+44,y+106,inW,tc,true);else tx(c,emptyT,P+44,y+146,26,500,T.mut);y+=h+22}
+        var sw2=(IW-20)/2;[['AP 예정',String(B.plan),'건','예정 인원 '+B.ppl+'명'],['예정 없음',String(B.none),'명','응답자 중']].forEach(function(t2,i2){var sx2=P+i2*(sw2+20);card(sx2,y,sw2,236,ct,cb);tx(c,t2[0],sx2+38,y+62,24,600,T.mut);numC(c,t2[1],sx2+34,y+166,116,T.fg,300,t2[2],T.mut);tx(c,t2[3],sx2+38,y+210,24,500,T.mut)});y+=236+22;
+        var ko_=function(a,z){return ko(a.name||a,z.name||z)};
+        listCard('미응답',B.pend.slice().sort(ko_),T.fg,'전원 응답했어요');
+        var pl=B.all.filter(function(r){return r.days.length}).sort(ko_),nl=B.all.filter(function(r){return !r.days.length}).sort(ko_);
+        (function(){var rh2=76,h=150+Math.max(pl.length,1)*rh2+10;card(P,y,IW,h,ct,cb);tx(c,'AP 예정',P+44,y+72,28,700,T.fg);tx(c,String(pl.length),W-P-44-mw(c,'명',24,500)-6,y+74,50,300,T.fg,'right');tx(c,'명',W-P-44,y+74,24,500,T.mut,'right');
+          var cs=44,gp2=10,gx0=W-P-44-(7*cs+6*gp2);DAYS.forEach(function(d,i){tx(c,d,gx0+i*(cs+gp2)+cs/2,y+124,20,600,i>4?T.faint:T.mut,'center')});
+          pl.forEach(function(r,i){var ry=y+150+i*rh2;if(i){c.fillStyle=line;c.fillRect(P+44,ry-6,IW-88,1.5)}var nm=r.name,nw=mw(c,nm,30,600);tx(c,nm,P+44,ry+44,30,600,T.fg);var tg=r.late?'마감후':r.extra?'명단외':'';if(tg)tx(c,tg,P+44+nw+12,ry+42,18,700,r.extra?T.ex:T.acT);
+            DAYS.forEach(function(d,k){var on=r.days.indexOf(d)>-1,bx=gx0+k*(cs+gp2);rr(c,bx,ry+12,cs,cs,13);c.fillStyle=on?col:(T.dark?'rgba(255,255,255,.07)':'rgba(0,0,0,.06)');c.fill()})});
+          if(!pl.length)tx(c,'없어요',P+44,y+196,26,500,T.mut);y+=h+22})();
+        listCard('예정 없음',nl,T.mut,'없어요');
+        y+=PL-22;
         var MB=C.ml?monthAvg(CY):null;
         if(MB&&MB.n){var mb=MB.bs[bi],mr=mb.base?mb.resp/mb.base*100:0;
           c.fillStyle=line;c.fillRect(PL,y-12,W-PL*2,1.5);
