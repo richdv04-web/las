@@ -779,6 +779,7 @@ function pillsC(c,T,x,y,W,items,sz){sz=sz||24;var xx=0,yy=0,h=52;items.forEach(f
 
 function makeReport(k){
   if(k==='notice')return makeNoticeV(2);
+  if(typeof k==='number')return makeNoticeV(2,k);
   if(k==='noticeA')return makeNoticeA();
   var C=calc(CY),T=readT(),W=1080,P=64,S=2,IW=W-P*2,B=k==='all'?null:C.bs[k],X=B||C;
   function paint(c,H){
@@ -919,7 +920,7 @@ function waveC(c,cx,cy,R,ratio,col,dark){var r=Math.min(ratio,1);
   c.restore();
   c.beginPath();c.arc(cx,cy,R,0,Math.PI*2);c.lineWidth=3;c.strokeStyle=hexA(col,.9);c.stroke()}
 function gaugeDraw(c,R,cx,cy,ratio,col,dark,N){if(GAUGE==='wave')waveC(c,cx,cy,R,ratio,col,dark);else tickRing(c,cx,cy,R,N,ratio,col,dark)}
-function makeNoticeV(v){
+function makeNoticeV(v,bi){
   var C=calc(CY),T=readT(),W=1080,PL=64,P=NOBOX?12:64,S=3,IW=W-P*2,pal=palN(T.dark);
   if(T.dark)T=Object.assign({},T,{mut:'#C4C4C7',faint:'#ABABAF'});
   var pv=add(CY,-7),Cp=calc(pv),hasP=Cp.base>0&&Cp.resp>0;
@@ -962,6 +963,26 @@ function makeNoticeV(v){
       function card(x,y0,w,h,top,bot,gl){if(NOBOX)return;if(MOOD&&!T.dark){c.save();c.shadowColor='rgba(30,30,60,.09)';c.shadowBlur=40*S;c.shadowOffsetY=14*S;rr(c,x,y0,w,h,44);c.fillStyle='#FFFFFF';c.fill();c.restore()}rr(c,x,y0,w,h,44);var g=c.createLinearGradient(0,y0,0,y0+h);g.addColorStop(0,top);g.addColorStop(1,bot);c.fillStyle=g;c.fill();if(MOOD&&gl&&false){c.save();rr(c,x,y0,w,h,44);c.clip();var rg=c.createRadialGradient(x+w*gl[1],y0+h*gl[2],0,x+w*gl[1],y0+h*gl[2],gl[3]);rg.addColorStop(0,hexA(gl[0],T.dark?.34:.13));rg.addColorStop(1,hexA(gl[0],0));c.fillStyle=rg;c.fillRect(x,y0,w,h);c.restore()}rr(c,x+.75,y0+.75,w-1.5,h-1.5,43);c.strokeStyle=bd;c.lineWidth=1.5;c.stroke()}
       var ct=MOOD?(T.dark?'rgba(255,255,255,.055)':'#FFFFFF'):(T.dark?'#1B1C1F':'#FFFFFF'),cb=MOOD?(T.dark?'rgba(255,255,255,.055)':'#FFFFFF'):(T.dark?'#141517':'#FFFFFF');
       var y0=y-30;
+      if(bi!=null){var o=BR[bi],B=o.b,col=o.col;
+        c.beginPath();c.arc(PL+9,y0+25,9,0,7);c.fillStyle=col;c.fill();tx(c,B.team,PL+30,y0+34,32,700,T.fg,'left',.5);tx(c,B.mgr||'',PL+30+mw(c,B.team,32,700,.5)+18,y0+34,24,400,T.mut);
+        numC(c,String(o.r),PL-8,y0+242,196,T.fg,300,'%',T.mut);
+        var bx=PL,by=y0+290;[['응답 '+B.resp+'명',T.fg],['미응답 '+(B.base-B.resp)+'명',T.mut],['대상 '+B.base+'명',T.mut]].forEach(function(ch){var cw=mw(c,ch[0],24,600)+36;rr(c,bx,by,cw,48,24);c.fillStyle=T.dark?'rgba(255,255,255,.06)':'rgba(0,0,0,.05)';c.fill();c.strokeStyle=T.dark?'rgba(255,255,255,.10)':'rgba(0,0,0,.08)';c.lineWidth=1.5;c.stroke();tx(c,ch[0],bx+18,by+32,24,600,ch[1]);bx+=cw+12});
+        var gx=W-PL-140,gy=y0+170;gaugeDraw(c,134,gx,gy,B.base?B.resp/B.base:0,col,T.dark,56);
+        if(o.d!=null){tx(c,'지난주 대비',gx,gy-22,22,500,T.faint,'center');dpill(c,T,gx,gy+28,o.d,true,pal,col,true)}else tx(c,String(B.resp),gx,gy+10,54,700,T.fg,'center');
+        y=y0+290+48+PL*1.5;
+        var MB=C.ml?monthAvg(CY):null;
+        if(MB&&MB.n){var mb=MB.bs[bi],mr=mb.base?mb.resp/mb.base*100:0;
+          c.fillStyle=line;c.fillRect(PL,y-12,W-PL*2,1.5);
+          var gk=glab(gstart(CY)),pm=gk.m-1,py=gk.y;if(pm<1){pm=12;py--}
+          var pws=gweeks(py+'-'+pad(pm)).filter(function(z){return D.responses.some(function(r){return r.cycle===z})}),pr=0,pb=0;
+          pws.forEach(function(z){var q=calc(z).bs[bi];pr+=q.resp;pb+=q.base});
+          y+=54;var m0=y;tx(c,MB.label+'월 월평균',PL,m0+32,32,600,T.fg,'left',-.4);m0+=70;
+          tx(c,'월평균 응답률',PL,m0+34,28,600,LBC(c,PL,'월평균 응답률',28,600),'left',1);
+          numC(c,String(Math.round(mr)),PL-8,m0+242,196,T.fg,300,'%',T.mut);
+          var mx=W-PL-140,my=m0+170;gaugeDraw(c,134,mx,my,mr/100,col,T.dark,56);
+          if(pb){var dm2=Math.round(mr)-Math.round(pr/pb*100);tx(c,'전월 대비',mx,my-22,22,500,T.faint,'center');dpill(c,T,mx,my+28,dm2,true,pal,col,true)}else tx(c,MB.n+'주 평균',mx,my+10,24,600,T.mut,'center');
+          y=m0+242+112}
+        return y}
       tx(c,'전체 응답률',PL,y0+34,28,600,LBC(c,PL,'전체 응답률',28,600),'left',1);
       numC(c,String(rAll),PL-8,y0+242,196,T.fg,300,'%',T.mut);
       var chx=PL,chy=y0+290;[['응답 '+C.resp+'명',T.fg],['미응답 '+(C.base-C.resp)+'명',T.mut],['대상 '+C.base+'명',T.mut]].forEach(function(ch){var cw=mw(c,ch[0],24,600)+36;rr(c,chx,chy,cw,48,24);c.fillStyle=T.dark?'rgba(255,255,255,.06)':'rgba(0,0,0,.05)';c.fill();c.strokeStyle=T.dark?'rgba(255,255,255,.10)':'rgba(0,0,0,.08)';c.lineWidth=1.5;c.stroke();tx(c,ch[0],chx+18,chy+32,24,600,ch[1]);chx+=cw+12});
